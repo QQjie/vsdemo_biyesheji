@@ -1,0 +1,4 @@
+E:\vsdemo\WebService\WebService\bin\WebService.dll
+E:\vsdemo\WebService\WebService\bin\WebService.pdb
+E:\vsdemo\WebService\WebService\obj\Debug\WebService.dll
+E:\vsdemo\WebService\WebService\obj\Debug\WebService.pdb

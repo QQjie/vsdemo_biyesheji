@@ -1,0 +1,12 @@
+﻿body {
+    background:  url(/Content/User/images/bg.jpg) no-repeat fixed top;
+   
+    background-size:100% 100%;
+}
+/*E:\vsdemo\HJ_OA\OA.UI.Portal\Content\User\images\bg.jpg*/
+#login {
+    /*width:500px;
+    height:500px;
+    background-image:url(/Content/User/images/bg.jpg);
+    background-color:red;*/
+}

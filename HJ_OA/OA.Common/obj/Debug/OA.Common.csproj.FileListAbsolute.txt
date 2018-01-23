@@ -1,0 +1,15 @@
+E:\vsdemo\HJ_OA\OA.Common\bin\Debug\OA.Common.dll
+E:\vsdemo\HJ_OA\OA.Common\bin\Debug\OA.Common.pdb
+E:\vsdemo\HJ_OA\OA.Common\bin\Debug\MySql.Data.dll
+E:\vsdemo\HJ_OA\OA.Common\obj\Debug\OA.Common.dll
+E:\vsdemo\HJ_OA\OA.Common\obj\Debug\OA.Common.pdb
+E:\vs2012demo\HJ_OA\OA.Common\bin\Debug\OA.Common.dll
+E:\vs2012demo\HJ_OA\OA.Common\bin\Debug\OA.Common.pdb
+E:\vs2012demo\HJ_OA\OA.Common\bin\Debug\MySql.Data.dll
+E:\vs2012demo\HJ_OA\OA.Common\obj\Debug\OA.Common.dll
+E:\vs2012demo\HJ_OA\OA.Common\obj\Debug\OA.Common.pdb
+E:\vsdemo\HJ_OA\OA.Common\bin\Debug\log4net.dll
+E:\vsdemo\HJ_OA\OA.Common\bin\Debug\ServiceStack.dll
+E:\vsdemo\HJ_OA\OA.Common\bin\Debug\ServiceStack.Interfaces.dll
+E:\vsdemo\HJ_OA\OA.Common\bin\Debug\ServiceStack.ServiceInterface.dll
+E:\vsdemo\HJ_OA\OA.Common\obj\Debug\OA.Common.csprojResolveAssemblyReference.cache

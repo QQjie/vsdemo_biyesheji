@@ -1,0 +1,7 @@
+E:\vsdemo\WebService\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+E:\vsdemo\WebService\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+E:\vsdemo\WebService\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+E:\vsdemo\WebService\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+E:\vsdemo\WebService\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+E:\vsdemo\WebService\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+E:\vsdemo\WebService\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb

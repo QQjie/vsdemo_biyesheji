@@ -1,0 +1,16 @@
+E:\vs2012demo\HJ_OA\OA.IDAL\bin\Debug\OA.IDAL.dll
+E:\vs2012demo\HJ_OA\OA.IDAL\bin\Debug\OA.IDAL.pdb
+E:\vs2012demo\HJ_OA\OA.IDAL\obj\Debug\OA.IDAL.dll
+E:\vs2012demo\HJ_OA\OA.IDAL\obj\Debug\OA.IDAL.pdb
+E:\vs2012demo\HJ_OA\OA.IDAL\obj\Debug\OA.IDAL.csprojResolveAssemblyReference.cache
+E:\vs2012demo\HJ_OA\OA.IDAL\bin\Debug\My.cs
+E:\vs2012demo\HJ_OA\OA.IDAL\bin\Debug\OA.Model.dll
+E:\vs2012demo\HJ_OA\OA.IDAL\bin\Debug\OA.Model.pdb
+E:\vsdemo\HJ_OA\OA.IDAL\bin\Debug\My.cs
+E:\vsdemo\HJ_OA\OA.IDAL\bin\Debug\OA.IDAL.dll
+E:\vsdemo\HJ_OA\OA.IDAL\bin\Debug\OA.IDAL.pdb
+E:\vsdemo\HJ_OA\OA.IDAL\bin\Debug\OA.Model.dll
+E:\vsdemo\HJ_OA\OA.IDAL\bin\Debug\OA.Model.pdb
+E:\vsdemo\HJ_OA\OA.IDAL\obj\Debug\OA.IDAL.csprojResolveAssemblyReference.cache
+E:\vsdemo\HJ_OA\OA.IDAL\obj\Debug\OA.IDAL.dll
+E:\vsdemo\HJ_OA\OA.IDAL\obj\Debug\OA.IDAL.pdb

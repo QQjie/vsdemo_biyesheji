@@ -1,0 +1,127 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+      <meta name="viewport" content="width=device-width" />
+    <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <link href="~/Content/StudentCss/Index1.css" rel="stylesheet" />
+    <link href="~/Content/Student/Css/stu.css" rel="stylesheet" />
+     <link href="~/Content/Student/Css/stu2.css" rel="stylesheet" />
+     <link href="~/Content/Student/Css/stu3.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/Admin/admin.css" rel="stylesheet" />
+    <link href="~/Content/Teacher/uploadform.css" rel="stylesheet" />
+    <title>GetTeaGroupByDep</title>
+    <script type="text/javascript">
+        function deletetg(obj) {
+           
+            var tgid = $(obj).parent().children().first().html();
+            $.post("/Admin/DeleteTg", { "tgid": tgid }, function (data, status) {
+                alert(data);
+                window.location = "/Admin/GetTeaGroupByDep?dep=" + $('.depselect option:selected').val();
+            });
+        }
+        $(function () {
+
+            $(".headerlinker").mouseover(function () {
+                //alert("fef");
+                $(this).css("background-color", "white");
+                $(this).css("color", "#030F17");
+            })
+            $(".headerlinker").mouseout(function () {
+                //alert("fef");
+                $(this).css("background-color", "#2F82FF");
+                $(this).css("color", "white");
+            })
+
+            $(".left_caozuo").mouseover(function () {
+                //alert("fef");
+                $(this).css("background-color", "#2F82FF");
+                $(this).css("color", "white");
+
+            })
+            $(".left_caozuo").mouseout(function () {
+                //alert("fef");
+                $(this).css("background-color", "white");
+                $(this).css("color", "#030F17");
+            })
+        });
+    </script>
+</head>
+<body>
+     <div style="height:100%;width:100%">
+        <div class="admintou">
+            
+        </div>
+
+        <!-----------------------头部的连接--------------------------------->
+         <div id="headerlist" >
+             <div class="headerlink">
+                 <div id="headerlink1" class="headerlinker">首    页</div>
+             </div>
+             <div class="headerlink">
+                 <div id="headerlink2" class="headerlinker">学生管理</div>
+             </div>
+             <div class="headerlink">
+                 <div id="headerlink3" class="headerlinker">老师管理</div>
+             </div>
+             <div class="headerlink">
+                 <div id="headerlink4" class="headerlinker">论文管理</div>
+             </div>
+         </div>
+         <!-----------------------头部的连接--------------------------------->
+         <!-----------------------主要内容部分--------------------------------->
+         <div id="content" class="content" style="position:relative;">
+           
+           
+             <div id="theme" class="laoshimanag" style="position:absolute;">  
+                 <div id="top" class="top">
+                     <div id="top_left" class="top_left" >请先选择要管理的院系</div>
+                      <div id="top_right"class="top_right" >
+                          <select id="lunwendepselect" class="depselect" ></select>
+                      </div>
+                     <div id="sousuo" >
+                         <input type="text" id="sousuoinput" class="sousuoinput"  />
+                         <input type="button" value="搜索" id="sousuob" class="sousuob" />
+
+                     </div>
+                 </div>
+                 <div id="left" class="left" >
+                     <input class="left_caozuo" type="button" id="chaxuntea" value="查询老师"/><br />
+                     <input class="left_caozuo" type="button" value="添加老师" id="addonetea" /><br />
+                     <input class="left_caozuo" type="button" id="teatgmanage" value="老师分组"/><br />
+                     <input class="left_caozuo" type="button" id="thememanage" value="课题管理"/><br />
+                 </div> 
+                 <div id="right" class="right">
+                     
+                 <div id="theme_fenye1" >
+                     <div class="tablename">老师信息表</div>
+                     <table id="theme_fenye_table1" class="theme_table" border="1">
+                    
+                        @* <tr><td >小组编号</td><td >小组名称</td><td >小组成员</td><td>删除小组</td></tr>
+                          @{
+                                      var t=(List<string>)Session["tgmanage"];
+                                     
+                                
+                                     for (int i = 0; i < t.Count; i++)
+                                     {
+                                         <tr><td >@t[i].Split(new Char[]{'-'})[0]</td><td onclick='tgclick(" + tgid + ")'>@t[i].Split(new Char[]{'-'})[1]</td><td>@t[i].Split(new Char[]{'-'})[2]</td><td onclick='deletetg(this)'>删除</td></tr>
+                                     }
+                                 
+                                    }*@
+                     </table>
+                 </div>
+             </div>
+
+
+         </div>
+         <!-----------------------主要内容部分--------------------------------->
+    </div>
+         </div>
+</body>
+</html>

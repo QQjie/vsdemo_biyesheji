@@ -1,0 +1,27 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>n</title>
+    <link href="~/Content/JQeasyui/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/Content/JQeasyui/themes/demo.css" rel="stylesheet" />
+    <link href="~/Content/JQeasyui/themes/icon.css" rel="stylesheet" />
+    <script src="~/Content/JQeasyui/jquery.easyui.min.js"></script>
+    
+    <script src="~/Content/JQeasyui/jquery.min.js"></script>
+</head>
+<body>
+    <div>
+        <div class="easyui-panel" title="Register" style="width:100%;max-width:400px;padding:30px 60px;">
+		<div style="margin-bottom:20px">
+			<label for="username" class="label-top">User Name:</label>
+			<input id="username" class="easyui-validatebox tb" data-options="required:true,validType:'length[3,10]',validateOnCreate:false,validateOnBlur:true">
+		</div>
+    </div>
+</body>
+</html>

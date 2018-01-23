@@ -1,0 +1,1183 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <link href="~/Content/StudentCss/Index1.css" rel="stylesheet" />
+    <link href="~/Content/Student/Css/stu.css" rel="stylesheet" />
+     <link href="~/Content/Student/Css/stu2.css" rel="stylesheet" />
+     <link href="~/Content/Student/Css/stu3.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/Admin/admin.css" rel="stylesheet" />
+    <link href="~/Content/Teacher/uploadform.css" rel="stylesheet" />
+
+@*    <link href="~/Content/JQeasyui/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/Content/JQeasyui/themes/icon.css" rel="stylesheet" />
+    <link href="~/Content/JQeasyui/themes/demo.css" rel="stylesheet" />
+    <script src="~/Content/JQeasyui/jquery.min.js"></script>
+    <script src="~/Content/JQeasyui/jquery.easyui.min.js"></script>*@
+
+    <title>Index</title>
+    <script type="text/javascript">
+        function geturl(obj) {
+            var jq = $(obj);
+            var url = jq.children().first().html();
+            //$.post("/Upload/FileDownLoad", { "filename": url }, function (data,status) {
+            //    alert(data);
+
+            //});
+            window.location = "/Upload/FileDownLoad?filename=" + url;
+        }
+        var totalpage, pagesize, cpage, count, curcount, outstr, the_id,outstr1;
+        $(function () {
+            
+            $(".headerlinker").mouseover(function () {
+                //alert("fef");
+                $(this).css("background-color", "white");
+                $(this).css("color", "#030F17");
+            })
+            $(".headerlinker").mouseout(function () {
+                //alert("fef");
+                $(this).css("background-color", "#2F82FF");
+                $(this).css("color", "white");
+            })
+
+            $(".left_caozuo").mouseover(function () {
+                //alert("fef");
+                $(this).css("background-color", "#2F82FF");
+                $(this).css("color", "white");
+                
+            })
+            $(".left_caozuo").mouseout(function () {
+                //alert("fef");
+                $(this).css("background-color", "white");
+                $(this).css("color", "#030F17");
+            })
+   
+            var select_dep, select_pro;
+        });
+        /*****删除小组中的老师******/
+        function deletetgtea(obj) {
+            var jq = $(obj);
+            var teaname = jq.prev().html();
+           // console.info(jq.parent().children().get(0));
+            var tgname = $("#dialogmodifytg :first-child").html();
+            $.post("/Admin/DeleteTeaInTg", { "teaname": teaname, "tgname": tgname }, function (data, status) {
+                $("#dialogmodifytg").dialog("close");
+                alert(data);
+            });
+        }
+        function addthistea(obj) {
+            var jq = $(obj);
+            var teaname = jq.prev().val();
+            var tgname = $("#dialogmodifytg :first-child").html();
+            $.post("/Admin/AddTeaToTg", { "teaname": teaname, "tgname": tgname, "dep": $("#lunwendepselect option:selected").val() }, function (data, status) {
+                if (data=="添加成功") {
+                    $("#dialogmodifytg").dialog("close");
+                }
+                alert(data);
+            })
+        }
+        function tgclick(t) {
+            var tgandteastr = "";
+            $.post("/Admin/GetTeaListByTgId", { "tgid": t, "dep": $("#lunwendepselect option:selected").val() }, function (data, status) {
+                var arr = data.split("-");
+                for (var i = 0; i < arr.length; i++) {
+                    if (i==0) {
+                       tgandteastr=tgandteastr+"<span>"+arr[0]+"</span></br>"
+                    }
+                    if (arr[i]!=""&&i!=0) {
+                        tgandteastr = tgandteastr + "<span>" + arr[i] + "</span><span onclick='deletetgtea(this)' >删除</span></br>"
+                     }
+                   // tgandteastr = arr[4];
+                }
+                tgandteastr = tgandteastr + "<input type='text' id='tgaddtea' /><input type='button'onclick='addthistea(this)' value='添加'/>"
+                $("#dialogmodifytg").html(tgandteastr);
+                $("#dialogmodifytg").dialog("open");
+                //if (status == "success") {
+                //    alert("ss");
+                //}
+            });
+            //alert(t);
+            
+        }
+        /*******课题表点击tr查看详情*******/
+        function trclick(obj) {
+            //alert("e");
+            var jq = $(obj);
+           // alert(jq.prev().children().first().html());
+           jq.prev().css("display","block");
+            
+        }
+        /****管理员审批通过课题******/
+        function passtheme(obj) {
+            var jq = $(obj);
+            var theid = jq.parent().children().first().html();
+            $.post("/Admin/PassTheme", { "theid": theid }, function (data, status) {
+                alert(data);
+            });
+        }
+        function reloadpage(target) {
+           // alert("reload");
+            //a//lert(select_pro);
+            var the_name, tea_name, dep, pro, intro, tg_name;
+            $.post("/Admin/GetStuGradeByPro", { "action": "getgrade", "pro": select_pro, "pgindex": target }, function (data, status) {
+                var outstr = "<tr><td >学生名</td><td >论文名</td><td >指导老师名</td><td >成绩</td></tr>";
+                var s = $.parseJSON(data);
+                // alert(s);
+                for (var i = 0; i < s.length; i++) {
+                    var arr = s[i].split("-");
+                    outstr = outstr + "<tr><td >" + arr[0] + "</td><td >" + arr[1] + "</td><td >" + arr[2] + "</td><td >" + arr[3] + "</td></tr>";
+                                        
+                }
+                  $("#theme_fenye_table").html(outstr);
+                   
+                
+            });
+        }
+        /********删除小组函数*********/
+        function deletetg(obj) {
+           // alert("s");
+            var tgid = $(obj).parent().children().first().html();
+            $.post("/Admin/DeleteTg", {"tgid":tgid}, function (data,status) {
+                alert(data);
+
+            });
+        }
+
+        function reloadpage1(target) {
+            //alert("reload");
+           // alert(select_pro);
+            var the_name, tea_name, dep, pro, intro, tg_name,teaid;
+            var dep = $(".depselect option:selected").val();
+            $.post("/Admin/GetAllTeaByDep", { "action": "gettea", "dep": dep, "pgindex": target }, function (data, status) {
+                var outstr = "<tr><td >老师工号</td><td >老师名</td><td >性别</td><td >所在评分小组</td><td>操作</td></tr>";
+                var s = $.parseJSON(data);
+                for (var i = 0; i < s.length; i++) {
+                    var arr = s[i].split("-");
+                    outstr = outstr + "<tr><td >" + arr[0] + "</td><td >" + arr[1] + "</td><td >" + arr[2] + "</td><td >" + arr[3] + "</td><td onclick='changetg(" + arr[4] + ")'>删除</td></tr>";
+                }
+                $("#theme_fenye_table1").html(outstr);
+                    
+                    if (status = "success") {
+                        setpage1();  //调用分页 
+                    }
+
+              
+                if (s == "") {
+                    $("#theme_fenye_table1").html("请先添加该院系的老师");
+                }
+            })
+        }
+        function addtg() {
+            var dep = $(".depselect option:selected").val();
+            $("#teadep").val(dep);
+            $("#dialogaddtg").dialog("open");
+        }
+        function getsessiontgid() {
+           // alert("se");
+            var id;
+            $.post("/Admin/GetSessionTgId", {}, function (data,status) {
+                var idjson = $.parseJSON(data);
+                id = parseInt(idjson);
+               // alert(id);
+                //alert(idjson);
+            })
+            return id;
+        }
+
+        function gotopage(target) {
+            cpage = target;        //把页面计数定位到第几页 
+            setpage();
+            reloadpage(target);    //调用显示页面函数显示第几页,这个功能是用在页面内容用ajax载入的情况 
+            //reloadpage1(target);
+        }
+        function gotopage1(target) {
+            cpage = target;        //把页面计数定位到第几页 
+            setpage1();
+            //reloadpage(target);    //调用显示页面函数显示第几页,这个功能是用在页面内容用ajax载入的情况 
+            reloadpage1(target);
+        }
+
+        function changetg(t) {
+            $.post("/Admin/ShanChuTea", { "teaid": t }, function (data,status) {
+                alert(data);
+            });
+        }
+
+        function setpage() {
+
+            if (totalpage <= 10) {        //总页数小于十页 
+                for (count = 1; count <= totalpage; count++) {
+                    if (count != cpage) {
+                        outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + count + ")'>" + count + "</a>";
+                    } else {
+                        outstr = outstr + "<span class='current' >" + count + "</span>";
+                    }
+                }
+            }
+            if (totalpage > 10) {  //总页数大于十页 
+                if (parseInt((cpage - 1) / 10) == 0) {
+                    for (count = 1; count <= 10; count++) {
+                        if (count != cpage) {
+                            outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + count + ")'>" + count + "</a>";
+                        } else {
+                            outstr = outstr + "<span class='current'>" + count + "</span>";
+                        }
+                    }
+                    outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + count + ")'> next </a>";
+                }
+                else if (parseInt((cpage - 1) / 10) == parseInt(totalpage / 10)) {
+                    outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + (parseInt((cpage - 1) / 10) * 10) + ")'>previous</a>";
+                    for (count = parseInt(totalpage / 10) * 10 + 1; count <= totalpage; count++) {
+                        if (count != cpage) {
+                            outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + count + ")'>" + count + "</a>";
+                        } else {
+                            outstr = outstr + "<span class='current'>" + count + "</span>";
+                        }
+                    }
+                }
+                else {
+                    outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + (parseInt((cpage - 1) / 10) * 10) + ")'>previous</a>";
+                    for (count = parseInt((cpage - 1) / 10) * 10 + 1; count <= parseInt((cpage - 1) / 10) * 10 + 10; count++) {
+                        if (count != cpage) {
+                            outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + count + ")'>" + count + "</a>";
+                        } else {
+                            outstr = outstr + "<span class='current'>" + count + "</span>";
+                        }
+                    }
+                    outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + count + ")'> next </a>";
+                }
+            }
+            document.getElementById("setpage1").innerHTML = "<div id='setpage1'><span id='info1'>共" + totalpage + "页|第" + cpage + "页<\/span>" + outstr + "<\/div>";
+            outstr = "";
+        }
+
+        function setpage1() {
+
+            if (totalpage <= 10) {        //总页数小于十页 
+                for (count = 1; count <= totalpage; count++) {
+                    if (count != cpage) {
+                        outstr1 = outstr1 + "<a href='javascript:void(0)' onclick='gotopage1(" + count + ")'>" + count + "</a>";
+                    } else {
+                        outstr1 = outstr1 + "<span class='current' >" + count + "</span>";
+                    }
+                }
+            }
+            if (totalpage > 10) {  //总页数大于十页 
+                if (parseInt((cpage - 1) / 10) == 0) {
+                    for (count = 1; count <= 10; count++) {
+                        if (count != cpage) {
+                            outstr1 = outstr1 + "<a href='javascript:void(0)' onclick='gotopage1(" + count + ")'>" + count + "</a>";
+                        } else {
+                            outstr1 = outstr1 + "<span class='current'>" + count + "</span>";
+                        }
+                    }
+                    outstr1 = outstr1 + "<a href='javascript:void(0)' onclick='gotopage1(" + count + ")'> next </a>";
+                }
+                else if (parseInt((cpage - 1) / 10) == parseInt(totalpage / 10)) {
+                    outstr1 = outstr1 + "<a href='javascript:void(0)' onclick='gotopage1(" + (parseInt((cpage - 1) / 10) * 10) + ")'>previous</a>";
+                    for (count = parseInt(totalpage / 10) * 10 + 1; count <= totalpage; count++) {
+                        if (count != cpage) {
+                            outstr1 = outstr1 + "<a href='javascript:void(0)' onclick='gotopage1(" + count + ")'>" + count + "</a>";
+                        } else {
+                            outstr1 = outstr1 + "<span class='current'>" + count + "</span>";
+                        }
+                    }
+                }
+                else {
+                    outstr1 = outstr1 + "<a href='javascript:void(0)' onclick='gotopage1(" + (parseInt((cpage - 1) / 10) * 10) + ")'>previous</a>";
+                    for (count = parseInt((cpage - 1) / 10) * 10 + 1; count <= parseInt((cpage - 1) / 10) * 10 + 10; count++) {
+                        if (count != cpage) {
+                            outstr1 = outstr1 + "<a href='javascript:void(0)' onclick='gotopage1(" + count + ")'>" + count + "</a>";
+                        } else {
+                            outstr1 = outstr1 + "<span class='current'>" + count + "</span>";
+                        }
+                    }
+                    outstr1 = outstr1 + "<a href='javascript:void(0)' onclick='gotopage1(" + count + ")'> next </a>";
+                }
+            }
+            document.getElementById("setpage2").innerHTML = "<div id='setpage2'><span id='info2'>共" + totalpage + "页|第" + cpage + "页<\/span>" + outstr1 + "<\/div>";
+            outstr1 = "";
+        }
+
+        $(function () {
+            $("#dialogDiv").dialog("close");
+            $("#dialogaddtg").dialog("close");
+            $("#dialogmodifytg").dialog("close");
+            var sp, sd,sc;
+            $.post("/Admin/GetAllDep", function (data, status) {
+               
+                var arr = data.split("-");
+                outstr = "";
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i]!="") {
+                        outstr = outstr + "<option value =" + arr[i] + ">" + arr[i] + "</option>"
+                    }
+                    
+                }
+                $("#managestu_select1").html(outstr);
+                $("#depselect").html(outstr);
+                $("#depselect1").html(outstr);
+                $("#lunwendepselect").html(outstr);
+                sd = $('#managestu_select1 option:selected').val();
+                if (status=="success") {
+                    $.post("/Admin/GetAllProByDep", { "dep": sd }, function (data, status) {
+                       
+                        var arr = data.split("-");
+                        outstr = "";
+                        for (var i = 0; i < arr.length; i++) {
+                            if (arr[i]!="") {
+                                outstr = outstr + "<option value =" + arr[i] + ">" + arr[i] + "</option>"
+                            }
+                        }
+                        $("#managestu_select2").html(outstr);
+                        sp = $('#managestu_select2 option:selected').val();
+                        if (status == "success") {
+                            sp = $("#managestu_select2 option:selected").val();
+                            select_pro = sp;
+                            $.post("/Admin/GetAllClassByPro", {"pro":sp}, function (data,status) {
+                                var arr = data.split("-");
+                                outstr = "";
+                                for (var i = 0; i < arr.length; i++) {
+                                    if (arr[i] != "") {
+                                        outstr = outstr + "<option value =" + arr[i] + ">" + arr[i] + "</option>"
+                                    }
+                                }
+                                $("#managestu_select3").html(outstr);
+                               
+                                sc = $('#managestu_select3 option:selected').val();
+
+                            });
+
+                            //$.post("/Admin/GetStuGradeByPro", { "action": "gettotal", "pro": sp }, function (data, status) {
+                            //    var s = $.parseJSON(data);
+                            //    //
+                            //    //alert(s);
+                            //    //alert(select_pro);
+                            //    //初始化 
+                            //    cpage = 1;
+                            //    pageIndex = s[0];
+                            //    pageSize = s[1];
+                            //    totalCount = s[2];
+                            //    outstr = "";
+                            //    totalpage = (totalCount + pageSize - 1) / pageSize;//总页数
+                            //    var the_name, tea_name, dep, pro, intro, score, stu, theme_name;
+                            //    $.post("/Admin/GetStuGradeByPro", { "action": "getgrade", "pgindex": 1, "pro": sp }, function (data, status) {
+                            //        var outstr = "<tr><td >学生名</td><td >论文名</td><td >指导老师名</td><td >成绩</td></tr>";
+                            //        var s = $.parseJSON(data);
+                            //        // alert(s);
+                            //        for (var i = 0; i < s.length; i++) {
+                            //            var arr = s[i].split("-");
+                            //            outstr = outstr + "<tr><td >" + arr[0] + "</td><td >" + arr[1] + "</td><td >" + arr[2] + "</td><td >" + arr[3] + "</td></tr>";
+                                        
+                                        
+                            //        }
+                            //        $("#theme_fenye_table").html(outstr);
+                            //        if (status = "success") {
+                            //            setpage();  //调用分页 
+                            //        }
+                            //    });
+                            //});
+                        }
+                    });
+                }
+
+               
+            });
+           
+            $("#headerlink2").click(function () {
+                var sp, sd, sc;
+                $.post("/Admin/GetAllDep", function (data, status) {
+                    var s = $.parseJSON(data);
+                    outstr = "";
+                    for (var i = 0; i < s.length; i++) {
+                        for (a in s[i]) {
+                            if (a == "Dep_Name") {
+                                outstr = outstr + "<option value =" + s[i][a] + ">" + s[i][a] + "</option>"
+                            }
+                        }
+                    }
+                    $("#managestu_select1").html(outstr);
+                    $("#depselect").html(outstr);
+                    sd = $('#managestu_select1 option:selected').val();
+                    outstr = "";
+
+                    if (status == "success") {
+                        $.post("/Admin/GetAllProByDep", { "dep": sd }, function (data, status) {
+                            var arr = data.split("-");
+                            outstr = "";
+                            for (var i = 0; i < arr.length; i++) {
+                                if (arr[i] != "") {
+                                    outstr = outstr + "<option value =" + arr[i] + ">" + arr[i] + "</option>"
+                                }
+                            }
+                            $("#managestu_select2").html(outstr);
+                            
+                            sp = $('#managestu_select2 option:selected').val();
+                            outstr = "";
+                            if (status == "success") {
+                                sp = $("#managestu_select2 option:selected").val();
+                                //alert(select_pro);
+                                select_pro = sp;
+                                $.post("/Admin/GetAllClassByPro", { "pro": sp }, function (data, status) {
+                                    var s = $.parseJSON(data);
+                                    outstr = "";
+                                    for (var i = 0; i < s.length; i++) {
+                                        for (a in s[i]) {
+                                            if (a == "C_Name") {
+                                                outstr = outstr + "<option value =" + s[i][a] + ">" + s[i][a] + "</option>"
+                                            }
+                                        }
+                                    }
+                                    $("#managestu_select3").html(outstr);
+                                    
+                                    sc = $('#managestu_select3 option:selected').val();
+                                    outstr = "";
+                                });
+                               /******成绩分页**********/
+                                $.post("/Admin/GetStuGradeByPro", { "action": "gettotal", "pro": sp }, function (data, status) {
+                                    var s = $.parseJSON(data);
+                                    cpage = 1;
+                                    pageIndex = s[0];
+                                    pageSize = s[1];
+                                    totalCount = s[2];
+                                    outstr = "";
+                                    totalpage = (totalCount + pageSize - 1) / pageSize;//总页数
+                                    var the_name, tea_name, dep, pro, intro, score, stu, theme_name;
+                                    $.post("/Admin/GetStuGradeByPro", { "action": "getgrade", "pgindex": 1, "pro": sp }, function (data, status) {
+                                        var outstr = "<tr><td >学生名</td><td >论文名</td><td >指导老师名</td><td >成绩</td></tr>";
+                                        var s = $.parseJSON(data);
+                                        // alert(s);
+                                        for (var i = 0; i < s.length; i++) {
+                                            var arr = s[i].split("-");
+                                            outstr = outstr + "<tr><td >" + arr[0] + "</td><td >" + arr[1] + "</td><td >" + arr[2] + "</td><td >" + arr[3] + "</td></tr>";
+                                        
+                                        }
+                                        $("#theme_fenye_table").html(outstr);
+                                       
+                                        if (status = "success") {
+                                            setpage();  //调用分页 
+                                        }
+                                    });
+                                });
+                                /****************/
+
+                            }
+                        });
+                    }
+
+
+                });
+            });
+            
+
+            $("#managestu_select1").change(function () {
+                select_dep = $('#managestu_select1 option:selected').val();
+                $.post("/Admin/GetAllProByDep", { "dep": select_dep }, function (data, status) {
+                    var arr = data.split("-");
+                    outstr = "";
+                    for (var i = 0; i < arr.length; i++) {
+                        if (arr[i] != "") {
+                            outstr = outstr + "<option value =" + arr[i] + ">" + arr[i] + "</option>"
+                        }
+                    }
+                    $("#managestu_select2").html(outstr);
+                    sp = $('#managestu_select2 option:selected').val();
+                    if (status == "success") {
+                        sp = $("#managestu_select2 option:selected").val();
+                        //$.post("/Admin/GetStuGradeByPro", { "action": "gettotal", "pro": sp }, function (data, status) {
+                        //    var s = $.parseJSON(data);
+                        //    cpage = 1;
+                        //    pageIndex = s[0];
+                        //    pageSize = s[1];
+                        //    totalCount = s[2];
+                        //    outstr = "";
+                        //    totalpage = Math.floor((totalCount + pageSize - 1) / pageSize);//总页数
+                        //    var the_name, tea_name, dep, pro, intro, score, stu, theme_name;
+                        //    $.post("/Admin/GetStuGradeByPro", { "action": "getgrade", "pgindex": 1, "pro": sp }, function (data, status) {
+                        //        var outstr = "<tr><td >学生名</td><td >论文名</td><td >指导老师名</td><td >成绩</td></tr>";
+                        //        var s = $.parseJSON(data);
+                        //        for (var i = 0; i < s.length; i++) {
+                        //            var arr = s[i].split("-");
+                        //            outstr = outstr + "<tr><td >" + arr[0] + "</td><td >" + arr[1] + "</td><td >" + arr[2] + "</td><td >" + arr[3] + "</td></tr>";
+                        //        }
+                        //        $("#theme_fenye_table").html(outstr);
+                        //            if (status = "success") {
+                        //                setpage();  //调用分页 
+                        //            }
+                        //        if (s=="") {
+                        //            $("#theme_fenye_table").html("学生成绩还没出来");
+                        //        }
+                        //    });
+                        //});
+                    }
+                });
+
+            });
+            $("#headerlink1").click(function () {
+                //隐藏显示div
+                $("#content>div").each(function () {
+                    if ($(this).attr("id") == "div1") {
+                        $(this).css("display", "block")
+                    } else {
+                        $(this).css("display", "none");
+                    }
+                });
+
+            });
+
+            $("#headerlink2").click(function () {
+                //隐藏显示div
+                $("#content>div").each(function () {
+                    if ($(this).attr("id") == "managestu") {
+                        $(this).css("display", "block")
+                    } else {
+                        $(this).css("display", "none");
+                    }
+                });
+                //select_dep = $('#managestu_select1 option:selected').val();
+                //alert(select_dep);
+                //$.post("/Admin/GetAllProByDep", { "dep": select_dep }, function (data, status) {
+                //    var s = $.parseJSON(data);
+                //    outstr = "";
+                //    for (var i = 0; i < s.length; i++) {
+                //        for (a in s[i]) {
+                //            if (a == "Pro_Name") {
+                //                outstr = outstr + "<option value =" + s[i][a] + ">" + s[i][a] + "</option>"
+                //            }
+                //        }
+                //    }
+                //    $("#managestu_select2").html(outstr);
+                    
+                //});
+                ////select_pro = $("#managestu_select2 option:selected").val();
+                
+
+
+            });
+
+            $("#managestu_select2").change(function () {
+                sp = $("#managestu_select2 option:selected").val();
+                //alert(select_pro);
+                //$.post("/Admin/GetStuGradeByPro", { "action": "gettotal", "pro": sp }, function (data, status) {
+                //    var s = $.parseJSON(data);
+                //    //
+                //    //alert(s);
+                //    //alert(select_pro);
+                //    //初始化 
+                //    cpage = 1;
+                //    pageIndex = s[0];
+                //    pageSize = s[1];
+                //    totalCount = s[2];
+                //    outstr = "";
+                //    totalpage = Math.floor((totalCount + pageSize - 1) / pageSize);//总页数
+                //    var the_name, tea_name, dep, pro, intro, score, stu, theme_name;
+                //    $.post("/Admin/GetStuGradeByPro", { "action": "getgrade", "pgindex": 1, "pro": sp }, function (data, status) {
+                //        var outstr = "<tr><td >学生名</td><td >论文名</td><td >指导老师名</td><td >成绩</td></tr>";
+                //        var s = $.parseJSON(data);
+                //        // alert(s);
+                //        for (var i = 0; i < s.length; i++) {
+                //            var arr = s[i].split("-");
+                //            outstr = outstr + "<tr><td >" + arr[0] + "</td><td >" + arr[1] + "</td><td >" + arr[2] + "</td><td >" + arr[3] + "</td></tr>";
+                                        
+                                        
+                //        }
+                //        $("#theme_fenye_table").html(outstr);
+                //            if (status = "success") {
+                //                setpage();  //调用分页 
+                //            }
+
+                      
+                //        if (s == "") {
+                //            $("#theme_fenye_table").html("学生成绩还没出来");
+                //        }
+                //    });
+                //});
+            });
+
+            $("#headerlink3").click(function () {
+                var dep = $(".depselect option:selected").val();
+                $("#teadep").val(dep);
+               // alert("3");
+                //隐藏显示div
+                $("#content>div").each(function () {
+                    if ($(this).attr("id") == "theme") {
+                        $(this).css("display", "block")
+                    } else {
+                        $(this).css("display", "none");
+                    }
+                });
+                var dep = $(".depselect option:selected").val();
+                var teanum, teaname, teasex, tg,teaid;
+
+                $.post("/Admin/GetAllTeaByDep", { "action": "gettotal", "dep": dep }, function (data, status) {
+                    var s = $.parseJSON(data);
+                    //
+                    //alert(s);
+                    //alert(select_pro);
+                    //初始化 
+                    cpage = 1;
+                    pageIndex = s[0];
+                    pageSize = s[1];
+                    totalCount = s[2];
+                    outstr = "";
+                    totalpage = Math.floor((totalCount + pageSize - 1) / pageSize);//总页数
+                    $.post("/Admin/GetAllTeaByDep", { "action": "gettea", "dep": dep, "pgindex": 1 }, function (data, status) {
+                        var outstr = "<tr><td >老师工号</td><td >老师名</td><td >性别</td><td >所在评分小组</td><td>操作</td></tr>";
+                        var s = $.parseJSON(data);
+                        for (var i = 0; i < s.length; i++) {
+                            var arr = s[i].split("-");
+                            outstr = outstr + "<tr><td >" + arr[0] + "</td><td >" + arr[1] + "</td><td >" + arr[2] + "</td><td >" + arr[3] + "</td><td onclick='changetg(" + arr[4]+ ")'>删除</td></tr>";
+                        }
+                        $("#theme_fenye_table1").html(outstr);
+                    
+                        if (status = "success") {
+                            setpage1();  //调用分页 
+                        }
+                           
+                        if (s == "") {
+                            $("#theme_fenye_table1").html("请先添加该院系的老师");
+                        }
+                    })
+                });
+
+
+            });
+            $("#chaxuntea").click(function () {
+
+                $(".tablename").html("老师信息表");
+                var dep = $(".depselect option:selected").val();
+                $("#teadep").val(dep);
+              // alert(dep);
+               var teanum, teaname, teasex, tg,teaid;
+
+               $.post("/Admin/GetAllTeaByDep", { "action": "gettotal", "dep": dep }, function (data, status) {
+                   var t='@Session["nice"]';
+                  // alert(t);
+                   var s = $.parseJSON(data);
+                   //
+                   //alert(s);
+                   //alert(select_pro);
+                   //初始化 
+                   cpage = 1;
+                   pageIndex = s[0];
+                   pageSize = s[1];
+                   totalCount = s[2];
+                   outstr = "";
+                   totalpage = Math.floor((totalCount + pageSize - 1) / pageSize);//总页数
+                   $.post("/Admin/GetAllTeaByDep", { "action": "gettea", "dep": dep, "pgindex": 1 }, function (data, status) {
+                       var outstr = "<tr><td >老师工号</td><td >老师名</td><td >性别</td><td >所在评分小组</td><td>操作</td></tr>";
+                       var s = $.parseJSON(data);
+                       for (var i = 0; i < s.length; i++) {
+                           var arr = s[i].split("-");
+                           outstr = outstr + "<tr><td >" + arr[0] + "</td><td >" + arr[1] + "</td><td >" + arr[2] + "</td><td >" + arr[3] + "</td><td onclick='changetg(" + arr[4] + ")'>删除</td></tr>";
+                       }
+                       $("#theme_fenye_table1").html(outstr);
+
+                       if (status = "success") {
+                           setpage1();  //调用分页 
+                       }
+
+                       if (s == "") {
+                           $("#theme_fenye_table1").html("请先添加该院系的老师");
+                       }
+                   })
+               });
+
+
+               
+            });
+          
+            
+            $("#teatgmanage").click(function () {
+                $(".tablename").html("评分小组表" + "<input id='addtgg' type='button' class='addtg' onclick='addtg()' value='添加评分小组' />");
+                var xiaozu;
+                  var dep = $(".depselect option:selected").val();
+                $.post("/Admin/GetTeaGroupByDep", { "dep": dep }, function (data, status) {
+                    var s = $.parseJSON(data);
+                   // alert(s);
+                    outstr = "<tr><td >小组编号</td><td >小组名称</td><td >小组成员</td><td>删除小组</td></tr>";
+                    for(a in s){
+                        xiazu = s[a];
+                        // alert(s[a]);
+                        var tgid = xiazu.split("-")[0];
+                        var strtg = xiazu.split("-")[1];
+                        var strtea = xiazu.split("-")[2];
+                        if (strtg!=" ") {
+                            outstr = outstr + "<tr><td >" + tgid + "</td><td onclick='tgclick(" + tgid + ")'>" + strtg + "</td><td>" + strtea + "</td><td onclick='deletetg(this)'>删除</td></tr>";
+                        }
+                       
+                    }
+                   // alert(outstr);
+                    $("#theme_fenye_table1").html(outstr);
+                    $("#setpage2").html("");
+                });
+               // window.location = "/Admin/GetTeaGroupByDep?dep=" + $('.depselect option:selected').val();
+            });
+            
+
+            $("#thememanage").click(function () {
+                $(".tablename").html("待审批课题的表");
+                var xiaozu;
+                var dep = $(".depselect option:selected").val();
+                $.post("/Admin/GetAllNoPassTheme", { "dep": dep }, function (data, status) {
+                    var s = $.parseJSON(data);
+                    //alert(s);
+                    outstr = "<tr><td >课题编号</td><td >课题名称</td><td >课题老师</td><td>提交时间</td><td>课题操作</td></tr>";
+                    for (var i = 0; i < s.length; i++) {
+                        //alert(s[i]);
+                        for (a in s[i]) {
+                            xiazu = s[i];
+                            // alert(s[a]);
+                            var arr = xiazu.split("-");
+                        }
+                        outstr = outstr + "<tr class='ketilan'><td >" + arr[0] + "</td><td>" + arr[1] + "</td><td>" + arr[2] + "</td><td>" + arr[4] + "</td><td onclick='passtheme(this)' >通过</td></tr><tr><td  colspan = 5 >" + arr[3] + "</td></tr>";
+                    }
+                   
+                    // alert(outstr);
+                    $("#theme_fenye_table1").html(outstr);
+                    $("#setpage2").html("");
+                });
+            });
+           
+            $("#tgtest").click(function () {
+                //alert("aa");
+                $. post("/Admin/ResPage", {}, function (data,status) {
+
+                    $("#theme_fenye_table1").html(data);
+                });
+
+
+            });
+            $("#addonetea").click(function () {
+                var dep = $(".depselect option:selected").val();
+                $("#teadep").val(dep);
+                $("#dialogDiv").dialog("open");
+                //$.post("/Admin/AddOneTea");
+
+            });
+            $("#dialogaddtg").dialog({
+                autoOpen: false,   // 是否自动弹出窗口
+                modal: true,    // 设置为模态对话框
+                resizable: true,
+                width: 410,   //弹出框宽度
+                height: 240,   //弹出框高度
+                title: "添加评分小组",  //弹出框标题
+                position: "center",  //窗口显示的位置
+                buttons: {
+                    '确定': function () {
+                        $.post("/Admin/AddTeaGroup", { "tgname": $('#tgname').val(),"dep":$(".depselect option:selected").val()}, function (data, status) {
+                            $(this).dialog("close");
+                            alert(data);
+                        });
+                    },
+                    '取消': function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            $("#dialogDiv").dialog({
+                autoOpen: false,   // 是否自动弹出窗口
+                modal: true,    // 设置为模态对话框
+                resizable: true,
+                width: 410,   //弹出框宽度
+                height: 240,   //弹出框高度
+                title: "添加老师",  //弹出框标题
+                position: "center",  //窗口显示的位置
+                buttons: {
+                    '确定': function () {
+                        $.post("/Admin/AddOneTea", { "teanum": $('#teanum').val(), "teaname": $('#teaname').val(), "teasex": $('#teasex').val(), "teadep": $('#teadep').val() }, function (data,status) {
+                            $(this).dialog("close");
+                            alert(data);
+                        });
+                    },
+                    '取消': function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+            $("#dialogmodifytg").dialog({
+                autoOpen: false,   // 是否自动弹出窗口<tr><td >学生名</td><td >
+                modal: true,    // 设置为模态对话框
+                resizable: true,
+                width: 410,   //弹出框宽度
+                height: 240,   //弹出框高度
+                title: "修改小组",  //弹出框标题
+                position: "center",  //窗口显示的位置
+            });
+            $("#stusoub").click(function () {
+                var val = $("#stusouinput").val();
+                $.post("/Admin/GetStuSou", { "key": val }, function (data, status) {
+                    outstr = "";
+                    var outstr = "<tr><td >学生名</td><td >论文名</td><td >指导老师名</td><td >成绩</td></tr>";
+                    var s = $.parseJSON(data);
+                    if (s=="") {
+                        $("#theme_fenye_table").html("没有查询结果");
+                    }
+                    for (var i = 0; i < s.length; i++) {
+                        var arr = s[i].split("-");
+                        outstr = outstr + "<tr><td >" + arr[0] + "</td><td >" + arr[1] + "</td><td >" + arr[2] + "</td><td >" + arr[3] + "</td></tr>";
+                    }
+                    $("#theme_fenye_table").html(outstr);
+                });
+            });
+
+
+            $("#sousuob").click(function () {
+                var val = $("#sousuoinput").val();
+                var dep = $(".depselect option:selected").val();
+                $.post("/Admin/GetTeaBySou", { "key": val,"dep":dep }, function (data, status) {
+                    var outstr = "<tr><td >老师工号</td><td >老师名</td><td >性别</td><td >所在评分小组</td><td>操作</td></tr>";
+                    var s = $.parseJSON(data);
+                    outstr = "";
+                    for (var i = 0; i < s.length; i++) {
+
+                        var arr = s[i].split("-");
+                        outstr = outstr + "<tr><td >" + arr[0] + "</td><td >" + arr[1] + "</td><td >" + arr[2] + "</td><td >" + arr[3] + "</td><td onclick='changetg(" + arr[4] + ")'>删除</td></tr>";
+                    }
+                    $("#theme_fenye_table1").html(outstr);
+                    if (s == "") {
+                        $("#theme_fenye_table1").html("没有结果");
+                    }
+                });
+               });
+           
+            /*************************************************************************/
+            $("#headerlink4").click(function () {
+                //隐藏显示div
+                $("#content>div").each(function () {
+                    if ($(this).attr("id") == "my_details") {
+                        $(this).css("display", "block")
+                    } else {
+                        $(this).css("display", "none");
+                    }
+                });
+                //$.post("/Admin/LunWenGuanLi", {}, function (data,status) {  
+            });
+
+            ///******通知栏文件********/
+            //$.post("/Student/GetAdminFile", {}, function (data, status) {
+            //    var s = $.parseJSON(data);
+            //    outstr = "";
+            //    if (s.length == 0) {
+
+            //    }
+            //    if (s.length != 0) {
+            //        for (var i = 0; i < s.length; i++) {
+            //            var arr = s[i].split("=");
+                       
+            //            var arr1 = arr[0].split(" ")[0].split("/");
+            //            var time = arr1[0] + "-" + arr1[1] + "-" + arr1[2];
+            //            outstr = outstr + "<li>" + time + "    " + "<a class='adfilename' readonly='true' onclick='xiazaiadfile(this)'   id='" + arr[2] + "'>" + arr[1] + "</a></li>"
+            //        }
+            //        $("#ul1").html(outstr);
+            //    }
+            //});
+            ///******参考文献********/
+            //$.post("/Student/GetTeacherFile", {}, function (data, status) {
+            //    var s = $.parseJSON(data);
+            //    outstr = "";
+            //    if (s.length == 0) {
+
+            //    }
+            //    if (s.length != 0) {
+            //        for (var i = 0; i < s.length; i++) {
+            //            var arr = s[i].split("=");
+            //            var arr1 = arr[0].split(" ")[0].split("/");
+            //            var time = arr1[0] + "-" + arr1[1] + "-" + arr1[2];
+            //            outstr = outstr + "<li>" + time + "    " + "<a class='adfilename' readonly='true' onclick='xiazaiadfile(this)'   id='" + arr[2] + "'>" + arr[1] + "</a></li>"
+            //        }
+            //        $("#ul2").html(outstr);
+            //    }
+            //});
+
+            $("#chaxunlunwen").click(function () {
+             
+                $.post("/Admin/GetAllStuFileZhong", {"dep":$('#depselect1 option:selected').val()},function(data,status){
+                   // alert(data);
+                    outstr = "";
+                    var tgname = "";
+                    var s = $.parseJSON(data);
+                    
+                    if (s == "") {
+                        $("#lunwenxinxi_stu").html("该院学生还没有提交论文");
+                    }
+                    if (s != "") {
+                        outstr = "<tr><td>学生名</td><td>论文文件名</td><td>提交时间</td><td>下载</td><td>操作</td></tr>"
+                        for (var i = 0; i < s.length; i++) {
+                            //if (i == 0) {
+                            //    $(".top2").html(s[0]);
+                            //    alert(s[0]);
+                            //}
+                            //if (i != 0) {
+                                var arr = s[i].split("=");
+                                outstr = outstr + "<tr><td>" + arr[0] + "</td><td>" + arr[1] + "</td><td>" + arr[2] + "</td><td onclick='geturl(this)'class='yingcangtd' style='background: url(/Content/images/xiazai2.jpg) no-repeat;background-size: 100% 100%;-moz-background-size: 100% 100%;-webkit-background-size: 100% 100%;' ><div style='display: none;' class='mt'>" + arr[3] + "</div></td><td>审批通过</td></tr>";
+                            //}
+                            //alert(outstr)
+                        }
+                        $("#lunwenxinxi_stu").html(outstr);
+                    }
+                
+                });
+
+            });
+            $("#chaxunkaitibaogao").click(function () {
+
+                $.post("/Admin/GetAllStuFileKai", { "dep": $('#depselect1 option:selected').val() }, function (data, status) {
+                    // alert(data);
+                    outstr = "";
+                    var tgname = "";
+                    var s = $.parseJSON(data);
+                    if (s == "") {
+                        $("#lunwenxinxi_stu").html("该院学生还没有提交开题报告");
+                    }
+                    if (s != "") {
+                        outstr = "<tr><td>学生名</td><td>开题报告名</td><td>提交时间</td><td>下载</td></tr>"
+                        for (var i = 0; i < s.length; i++) {
+                            if (i == 0) {
+                                $(".top2").html(s[0]);
+                            }
+                            if (i != 0) {
+                                var arr = s[i].split("=");
+                                outstr = outstr + "<tr><td>" + arr[0] + "</td><td>" + arr[1] + "</td><td>" + arr[2] + "</td><td onclick='geturl(this)'class='yingcangtd' style='background: url(/Content/images/xiazai2.jpg) no-repeat;background-size: 100% 100%;-moz-background-size: 100% 100%;-webkit-background-size: 100% 100%;' ><div style='display: none;' class='mt'>" + arr[3] + "</div></td></tr>";
+                            }
+                        }
+                        $("#lunwenxinxi_stu").html(outstr);
+                    }
+
+                });
+
+            });
+
+            $("#chaxunstu").click(function () {
+                $.post("/Admin/GetAllStu", { "pro": $("#managestu_select2 option:selected").val() }, function (data, status) {
+                    outstr = ""
+                    //alert(data);
+                    var s = $.parseJSON(data);
+                   // alert(s);
+                    if (s.length == 0) {
+                        $("#theme_fenye_table").html("该院还没有添加毕业生");
+                    }
+                    if (s.length != 0) {
+                        outstr = "<tr><td>学生学号<t/d><td>学生姓名</td><td>学生性别</td><td>联系方式</td></tr>";
+                        for (var i = 0; i < s.length; i++) {
+                            var arr = s[i].split("-");
+                            outstr = outstr + "<tr><td>" + arr[0] + "</td>" + "<td>" + arr[1] + "</td>" + "<td>" + arr[2] + "</td>" + "<td>" + arr[3] + "</td></tr>"
+                        }
+                        $("#theme_fenye_table").html(outstr);
+                    }
+                });
+
+            });
+        });
+    </script>
+</head>
+<body>
+     <div style="height:100%;width:100%">
+        <div class="admintou">
+            
+        </div>
+
+        <!-----------------------头部的连接--------------------------------->
+         <div id="headerlist" >
+             <div class="headerlink">
+                 <div id="headerlink1" class="headerlinker">首    页</div>
+             </div>
+             <div class="headerlink">
+                 <div id="headerlink2" class="headerlinker">学生管理</div>
+             </div>
+             <div class="headerlink">
+                 <div id="headerlink3" class="headerlinker">老师管理</div>
+             </div>
+             <div class="headerlink">
+                 <div id="headerlink4" class="headerlinker">论文管理</div>
+             </div>
+         </div>
+         <!-----------------------头部的连接--------------------------------->
+         <!-----------------------主要内容部分--------------------------------->
+         <div id="content" class="content" style="position:relative;">
+             <div id="div1" class="stuzhuye" style="position:absolute;" >
+
+                
+                 @*<form action="/Upload/FileDownLoad" method="post"><input type="submit" value="xizai" id="xiazai" /></form>
+                   <form action="/Upload/FileDownLoad" method="post"><input type="submit" value="xizai" id="xiazai3" /></form>
+                   <form action="/Upload/FileDownLoad" method="post"><input type="submit" value="xizai" id="xiazai2" /></form>
+                 <form action="/Upload/AdminFileUpLoad" method="post" enctype="multipart/form-data" >
+                     <input type="file" name="file" />
+                     <input type="text" name="filename" />
+                     <input type="submit" value="上传" />
+                 </form>*@
+                   <div class="stu_zhu_center">
+                      <div class="stu_zhu_beijing"></div>
+                      <div class="stu_zhu_tongzhi">
+                          <div class="stu_zhu_tongzhi_top">
+                              <div class="stu_zhu_tongzhi_top_1"><div class="top_1">近期通知</div></div>
+                              
+                              <div class="stu_zhu_tongzhi_top_2">
+                                  <form action="/Upload/AdminFileUpLoad" method="post" enctype="multipart/form-data" class="uploadform"  >
+                                     <input type="file" name="file" class="file" />
+                                     <input type="text" name="filename" placeholder="请为文件重新命名" class="newfilename"  /><br />
+                                     <textarea name="intro" rows="3" cols="20" class="textarea" placeholder="上传资料的介绍" ></textarea><br />
+                                     <input type="submit" value="上传通知" class="upbutton" />
+                                  </form>
+                              </div>
+                             
+                          </div>
+                          <div class="stu_zhu_tongzhi_bottom">
+                              <div class="stu_zhu_tongzhi_top_1"><div class="top_1">参考文献</div></div>
+                              
+                              <div class="stu_zhu_tongzhi_top_2">
+                                    @{
+                                      var t2=(List<string>)Session["strlist2"];
+                                     
+                                   <ul id="ul2">
+                                     @for (int i = 0; i < t2.Count; i++)
+                                     {
+                                         <li>@t2[i].Split(new Char[]{'='})[0].Split(new Char[]{' '})[0] <a class='adfilename' @*readonly='true'*@ onclick='xiazaiadfile(this)'   id="@t2[i].Split(new Char[]{'='})[2]">@t2[i].Split(new Char[]{'='})[1]</a></li>
+                                     }
+                                  </ul>
+                                    }
+                                  @*<div style="margin:20px 0;"></div>
+	                                    <div class="easyui-panel" style="width:100%;max-width:400px;padding:30px 60px;">
+		                                    <div style="margin-bottom:20px">
+		                                	<input class="easyui-datebox" label="Start Date:" labelPosition="top" style="width:100%;">
+		                                    </div>
+		                                 <div style="margin-bottom:20px">
+		                                	<input class="easyui-datebox" label="End Date:" labelPosition="top" style="width:100%;">
+		                                </div>
+	</div>*@
+                              </div>
+
+                          </div>
+                      </div>
+                      <div class="stu_zhu_right">
+                         
+                            
+                      </div>
+                        @* <form action="/Upload/AdminFileUpLoad" method="post" enctype="multipart/form-data" class="uploadform"  >
+                               <input type="file" name="file" class="file" />
+                               <input type="text" name="filename" placeholder="请为文件重新命名" class="newfilename"  /><br />
+                               <textarea name="intro" rows="3" cols="20" class="textarea" placeholder="上传资料的介绍" ></textarea><br />
+                              <input type="submit" value="上传通知" class="upbutton" />
+                          </form>*@
+                  </div>
+                 
+             </div>
+             <div id="managestu" style="position:absolute;display:none" >
+                 <div class="top">
+                     <div class="jiemianzhuti" >学生管理主界面</div>
+                     <div id="managestu_zhu">
+                     <div id="stusousuo">
+                         <input type="text" id="stusouinput" />
+                         <input type="button" id="stusoub" value="搜索" />
+
+
+                     </div>
+                     <select id="managestu_select1" ></select>
+                     <select id="managestu_select2" ></select>
+                     <select id="managestu_select3"></select>
+                     </div>
+                 </div>
+                 <div class="left">
+                    
+                     <input class="left_caozuo" type="button" id="chaxunstu" value="查询学生"/><br />
+                     <input class="left_caozuo" type="button" id="addonestu" value="添加学生" /><br />
+                     <input class="left_caozuo" type="button" id="stugramanage" value="学生成绩"/><br />
+                     <input class="left_caozuo" type="button" id="thememanagfewfwe" value="课题管理"/><br />
+                       
+                 </div>
+                 <div class="right">
+                      <div id="theme_fenye" >
+                          <table id="theme_fenye_table" class="theme_table" border="1"></table>
+                      </div>
+                      @* <div id="setpage1"></div> *@
+                 </div>
+                 
+             </div>
+             <div id="theme" class="laoshimanag" style="position:absolute;display:none">  
+                 <div id="top" class="top">
+                     <div id="top_left" class="top_left" >请先选择要管理的院系</div>
+                      <div id="top_right"class="top_right" >
+                          <select id="lunwendepselect" class="depselect" ></select>
+                      </div>
+                     <div id="sousuo" >
+                         <input type="text" id="sousuoinput" class="sousuoinput"  />
+                         <input type="button" value="搜索" id="sousuob" class="sousuob" />
+
+                     </div>
+                 </div>
+                 <div id="left" class="left" >
+                     <input class="left_caozuo" type="button" id="chaxuntea" value="查询老师"/><br />
+                     <input class="left_caozuo" type="button" value="添加老师" id="addonetea" /><br />
+                     <input class="left_caozuo" type="button" id="teatgmanage" value="老师分组"/><br />
+                     <input class="left_caozuo" type="button" id="thememanage" value="课题管理"/><br />
+                 </div> 
+                 <div id="right" class="right">
+                      <div id="themelist">
+                   <div id="dialogDiv" style="text-align: center;padding-top: 24px">
+                  <label>工号:</label><input type="text" id="teanum" name="teanum" required="required" /><br>
+                  <label>姓名:</label><input type="text" id="teaname" name="teaname" required="required" /><br>
+                  <label>性别:</label><input type="text" id="teasex" name="teasex" /><br>
+                  <label>院系:</label><input type="text" id="teadep" name="teadep" readonly="true" /><br>
+                    </div>
+                    <div id="dialogaddtg" style="text-align: center;padding-top: 24px">
+                    <label>评分小组名称:</label><input type="text" id="tgname" name="tgname" required="required" /><br>
+                  
+                    </div>
+                  <div id="dialogmodifytg" style="text-align: center;padding-top: 24px">
+                    <label>评分小组名称:</label><input type="text" id="modifytgname" name="tgname" required="required" /><br>
+                  
+                    </div>
+                 </div>
+                 <div id="theme_fenye1" >
+                     <div class="tablename">老师信息表</div>
+                     <table id="theme_fenye_table1" class="theme_table" border="1">
+                        
+                     </table>
+                 </div>
+                 <div id="setpage2"></div> 
+
+                 </div>
+                
+             </div>
+
+             <!----------------------个人信息详情--------------------------------->
+             <div id="my_details" class="my_details" style="position:absolute;display:none">
+                 <div class="top">
+                     <div id="top_left1" class="top_left" >请先选择要管理的院系</div>
+                      <div id="top_right1"class="top_right" >
+                          <select id="depselect1" class="depselect" ></select>
+                      </div>
+                     <div id="sousuolunwen" >
+                         <input type="text" id="sousuoinputlunwen" class="sousuoinput"  />
+                         <input type="button" value="搜索" id="sousuob论文" class="sousuob" />
+
+                     </div>
+                 </div>
+                 <div class="left">
+                     <input class="left_caozuo" type="button" id="chaxunlunwen" value="查询论文"/><br />
+                     <input class="left_caozuo" type="button" id="chaxunkaitibaogao" value="开题报告"/><br />
+                     
+                 </div>
+                 <div class="right">
+                      <table id="lunwenxinxi_stu" class="theme_table" border="1">
+                     </table>
+                     
+                     
+                 </div>
+             </div>
+              <!----------------------个人信息详情--------------------------------->
+
+         </div>
+         <!-----------------------主要内容部分--------------------------------->
+    </div>
+</body>
+</html>

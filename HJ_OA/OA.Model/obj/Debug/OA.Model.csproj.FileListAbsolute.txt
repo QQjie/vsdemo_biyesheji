@@ -1,0 +1,12 @@
+E:\vsdemo\HJ_OA\OA.Model\bin\Debug\OA.Model.dll
+E:\vsdemo\HJ_OA\OA.Model\bin\Debug\OA.Model.pdb
+E:\vsdemo\HJ_OA\OA.Model\obj\Debug\OA.Model.dll
+E:\vsdemo\HJ_OA\OA.Model\obj\Debug\OA.Model.pdb
+E:\vsdemo\HJ_OA\OA.Model\bin\Debug\My.cs
+E:\vs2012demo\HJ_OA\OA.Model\bin\Debug\My.cs
+E:\vs2012demo\HJ_OA\OA.Model\bin\Debug\OA.Model.dll
+E:\vs2012demo\HJ_OA\OA.Model\bin\Debug\OA.Model.pdb
+E:\vs2012demo\HJ_OA\OA.Model\obj\Debug\OA.Model.dll
+E:\vs2012demo\HJ_OA\OA.Model\obj\Debug\OA.Model.pdb
+E:\vsdemo\HJ_OA\OA.Model\bin\Debug\OA.Model.dll.config
+E:\vsdemo\HJ_OA\OA.Model\obj\Debug\OA.Model.csprojResolveAssemblyReference.cache

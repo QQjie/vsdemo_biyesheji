@@ -1,0 +1,53 @@
+﻿
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddTheme</title>
+    <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <link href="~/Content/Teacher/addtheme.css" rel="stylesheet" />
+    <script type="text/javascript">
+        $(function () {
+            $.post("/Teacher/GetPro", function (data, status) {
+               // var s = $.parseJSON(data);
+                outstr = "";
+                var arr = data.split("-");
+                alert(arr[0]);
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i]!="") {
+                        outstr = outstr + "<option value =" + arr[i] + ">" + arr[i] + "</option>"
+                    }
+                }
+                $("#xianxuanzhuanye").html(outstr);
+            });
+        })
+
+    </script>
+</head>
+<body>
+    <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+    
+    <div class="addthemecenter">
+
+        <div class="addtheme_top">申请课题</div>
+
+       <div class="addtheme_center">
+           <div class="addtheme_left"></div>
+            <form action="/Teacher/AddTheme" method="post">
+                
+                      课题名：<input type="text" id="ketiming" name="ketiming" style="height: 25px;border: 1px solid green;border-radius: 5px; width:200px" /><br />
+                      限选专业：<select id="xianxuanzhuanye" name="xianxuanzhuanye" style="height: 25px;border: 1px solid green;border-radius: 5px; width:200px" >
+                                </select><br />
+                      课题介绍：<textarea rows="3" cols="20" id="ketijieshao" name="ketijieshao" style="border: 1px solid green;border-radius: 5px;"></textarea><br />
+                      <input type="submit" id="save" value="申请" style="height: 25px;width:100px; border: 1px solid green;border-radius: 5px;"/>
+            </form>
+       </div>
+   </div>
+</body>
+</html>

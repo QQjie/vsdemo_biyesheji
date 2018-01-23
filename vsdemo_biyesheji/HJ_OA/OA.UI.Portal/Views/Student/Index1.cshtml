@@ -1,0 +1,664 @@
+﻿@using System.Collections.Generic;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index1</title>
+    <link href="~/Content/Admin/admin.css" rel="stylesheet" />
+    <link href="~/Content/Teacher/teacher.css" rel="stylesheet" />
+    <link href="~/Content/Student/Css/stu.css" rel="stylesheet" />
+    <link href="~/Content/Teacher/uploadform.css" rel="stylesheet" />
+    <link href="~/Content/Student/Css/stu2.css" rel="stylesheet" />
+    <link href="~/Content/Student/Css/stu3.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+     <script type="text/javascript">
+         function ChangeDateFormat(val) {
+             if (val != null) {
+                 var date = new Date(parseInt(val.replace("/Date(", "").replace(")/", ""), 10));
+                 //月份为0-11，所以+1，月份小于10时补个0
+                 var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                 var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                 return date.getFullYear() + "-" + month + "-" + currentDate;
+             }
+             return "";
+         }
+         function stuxuanquketi(obj){
+             var jq = $(obj);
+             var ketiming = jq.parent().children().first().html();
+             $.post("/Student/StuXuanzeTheme", { "ketiming": ketiming }, function (data, status) {
+                 alert(data);
+             });
+         }
+         /********查看老师的所有课题**********/
+         function xuanlaoshi(obj) {
+             var jq = $(obj);
+             var kefou = 1;
+             if (jq.css("background-color") == 'rgb(225, 225, 225)') {
+                 kefou = 0;
+             }
+             teaname = jq.html();
+             $.post("/Student/GetTeaThemes", { "teaname": teaname ,"kefou":kefou}, function (data, status) {
+                 var s = $.parseJSON(data);
+                // alert(s.length==0);
+                 if (s.length == 0) {
+                     $(".xuanti_right_left_table").html("该老师还没有上传论文课题");
+                 }
+                 outstr = "";
+                 if (s.length != 0) {
+                     outstr = "<tr><td>课题名称</td><td>限选专业</td><td>评分小组</td><td>是否选取</td></tr>";
+                     for (var i = 0; i < s.length; i++) {
+                         var sta = "选取";
+                         var arr = s[i].split("-");
+                         if (arr[3]==0) {
+                             sta = "不可选";
+                             outstr = outstr + "<tr><td>" + arr[0] + "</td><td>" + arr[1] + "</td><td>" + arr[2] + "</td><td>" + sta + "</td><tr>";
+                         }
+                         if (arr[3]!=0) {
+                             outstr = outstr + "<tr><td>" + arr[0] + "</td><td>" + arr[1] + "</td><td>" + arr[2] + "</td><td onclick='stuxuanquketi(this)'>" + sta + "</td><tr>";
+                         }
+                     }
+                     $(".xuanti_right_left_table").html(outstr);
+                 }
+             });
+         }
+
+         /**********下载通知**************/
+         function xiazaiadfile(obj) {
+             var jq = $(obj);
+             var url=jq.attr("id");
+             window.location = "/Upload/FileDownLoad1?filename=" + url;
+         }
+       
+         var totalpage, pagesize, cpage, count, curcount, outstr,the_id;
+         function reloadpage(target) {
+             var the_name, tea_name, dep, pro, intro, tg_name;
+             $.post("/Student/GetAllTheme", { "action": "gettheme" ,"pgindex":target}, function (data, status) {
+                 var outstr = "<tr><td >课题名</td><td >老师名</td><td >院系名</td><td >专业名</td><td >评分小组</td><td >介绍</td><td >选择</td></tr>";
+                 var s = $.parseJSON(data);
+                 for (var i = 0; i < s.length; i++) {
+                     for (a in s[i]) {
+                         if (a=="Theme_Id") {
+                             the_id=s[i][a];
+                         }
+                         if (a=="SubTime") {
+                             var t=ChangeDateFormat(s[i][a]);
+                             //alert(t);
+                         }
+                         if (a=="Theme_Name") {
+                              the_name = s[i][a];
+                         }
+                         if (a == "Teacher") {
+                              tea_name = s[i][a].Tea_Name;
+                         }
+                         if (a == "Department") {
+                              dep = s[i][a].Dep_Name;
+                         }
+                         if (a == "Profession") {
+                              pro = s[i][a].Pro_Name;
+                         }
+                         if (a == "TeaGroup") {
+                              tg_name = s[i][a].TG_Name;
+                         }
+                         if (a == "Introduce") {
+                              intro = s[i][a];
+                         }
+                     }
+                     outstr = outstr + "<tr><td >" + the_name + "</td><td >" + tea_name + "</td><td >" + dep + "</td><td >" + pro + "</td><td >" + tg_name + "</td><td ><details><summary>课题介绍</summary>" + intro + "</details></td><td  onclick='stuchosetheme(" + the_id + ")'>确认选择</td></tr>";
+                     $("#theme_fenye_table").html(outstr);
+                 }
+             });
+         }
+         function gotopage(target) {
+            //  alert("geoto");
+             cpage = target;        //把页面计数定位到第几页 
+             setpage();
+             reloadpage(target);    //调用显示页面函数显示第几页,这个功能是用在页面内容用ajax载入的情况 
+         }
+        
+         function fangqitheme(t) {
+             document.getElementById("theme" + t).innerHTML = "已放弃";
+             $.post("/Student/FangQi", { "themeid": t }, function (data,status) {
+                 alert(data);
+                 alert("123");
+             });
+         }
+
+         function stuchosetheme(id) {
+             $.post("/Student/ChoseThisTheme", { "themeid": id }, function(data,status) {
+                 alert(data)
+             });
+         }
+       
+         function setpage() {
+             //alert("set");
+             if (totalpage <= 10) {        //总页数小于十页 
+                 for (count = 1; count <= totalpage; count++) {
+                     if (count != cpage) {
+                         outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + count + ")'>" + count + "</a>";
+                     } else {
+                         outstr = outstr + "<span class='current' >" + count + "</span>";
+                     }
+                 }
+             }
+             if (totalpage > 10) {  //总页数大于十页 
+                 if (parseInt((cpage - 1) / 10) == 0) {
+                     for (count = 1; count <= 10; count++) {
+                         if (count != cpage) {
+                             outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + count + ")'>" + count + "</a>";
+                         } else {
+                             outstr = outstr + "<span class='current'>" + count + "</span>";
+                         }
+                     }
+                     outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + count + ")'> next </a>";
+                 }
+                 else if (parseInt((cpage - 1) / 10) == parseInt(totalpage / 10)) {
+                     outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + (parseInt((cpage - 1) / 10) * 10) + ")'>previous</a>";
+                     for (count = parseInt(totalpage / 10) * 10 + 1; count <= totalpage; count++) {
+                         if (count != cpage) {
+                             outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + count + ")'>" + count + "</a>";
+                         } else {
+                             outstr = outstr + "<span class='current'>" + count + "</span>";
+                         }
+                     }
+                 }
+                 else {
+                     outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + (parseInt((cpage - 1) / 10) * 10) + ")'>previous</a>";
+                     for (count = parseInt((cpage - 1) / 10) * 10 + 1; count <= parseInt((cpage - 1) / 10) * 10 + 10; count++) {
+                         if (count != cpage) {
+                             outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + count + ")'>" + count + "</a>";
+                         } else {
+                             outstr = outstr + "<span class='current'>" + count + "</span>";
+                         }
+                     }
+                     outstr = outstr + "<a href='javascript:void(0)' onclick='gotopage(" + count + ")'> next </a>";
+                 }
+             }
+             document.getElementById("setpage").innerHTML = "<div id='setpage'><span id='info'>共" + totalpage + "页|第" + cpage + "页<\/span>" + outstr + "<\/div>";
+             outstr = "";
+         }
+
+         $(function () {
+             $("#dialogtel").dialog("close");
+             /******通知栏文件********/
+             $.post("/Student/GetAdminFile", {}, function (data,status) {
+                 //var s = $.parseJSON(data);
+                 //outstr="";
+                 //if (s.length==0) {
+
+                 //}
+                 //if (s.length!=0) {
+                 //    for (var i = 0; i < s.length; i++) {
+                 //        var arr = s[i].split("=");
+                 //        var arr1 = arr[0].split(" ")[0].split("/");
+                 //        var time = arr1[0] + "-" + arr1[1] + "-" + arr1[2];
+                 //        outstr = outstr+"<li>"+time + "    " + "<a class='adfilename' readonly='true' onclick='xiazaiadfile(this)'   id='"+arr[2]+"'>"+arr[1]+"</a></li>"
+                 //    }
+                 //    $("#ul1").html(outstr);
+                 //}
+             });
+
+             $("#filestyle").change(function () {
+                 upfilestyle = $('#filestyle option:selected').val();
+                 $("#stuform1").attr("action", "/Upload/StuFileUpLoad?style=" + upfilestyle);
+                 $("#stuform2").attr("action", "/Upload/StuFileOverUpLoad?style=" + upfilestyle);
+             });
+
+             /******参考文献********/
+             $.post("/Student/GetTeacherFile", {}, function (data, status) {
+                 var s = $.parseJSON(data);
+                 outstr = "";
+                 if (s.length == 0) {
+
+                 }
+                 if (s.length != 0) {
+                     for (var i = 0; i < s.length; i++) {
+                         var arr = s[i].split("=");
+                         var arr1 = arr[0].split(" ")[0].split("/");
+                         var time = arr1[0] + "-" + arr1[1] + "-" + arr1[2];
+                         outstr = outstr + "<li>" + time + "    " + "<a class='adfilename' readonly='true' onclick='xiazaiadfile(this)'   id='" + arr[2] + "'>" + arr[1] + "</a></li>"
+                     }
+                     $("#ul2").html(outstr);
+                 }
+             });
+
+             $(".headerlinker").mouseover(function () {
+                 //alert("fef");
+                 $(this).css("background-color", "white");
+                 $(this).css("color", "#030F17");
+             })
+             $(".headerlinker").mouseout(function () {
+                 //alert("fef");
+                 $(this).css("background-color", "#2F82FF");
+                 $(this).css("color", "white");
+             })
+
+             $(".left_caozuo").mouseover(function () {
+                 //alert("fef");
+                 $(this).css("background-color", "#2F82FF");
+                 $(this).css("color", "white");
+
+             })
+             $(".left_caozuo").mouseout(function () {
+                 //alert("fef");
+                 $(this).css("background-color", "white");
+                 $(this).css("color", "#030F17");
+             })
+
+
+
+            $("#content div").each(function () {
+               // alert($(this).css("display")=="none")
+            });
+            // $("#content>#content_details").click(function () { alert("div3")});
+            $("#headerlink1").click(function () {
+                //隐藏显示div
+                $("#content>div").each(function () {
+                    if ($(this).attr("id") == "div1") {
+                        $(this).css("display", "block")
+                    } else {
+                        $(this).css("display", "none");
+                    }
+                });
+
+            });
+            $("#headerlink2").click(function () {
+                //隐藏显示div
+                $("#content>div").each(function () {
+                    if ($(this).attr("id") == "my_themes") {
+                        $(this).css("display", "block")
+                    } else {
+                        $(this).css("display", "none");
+                    }
+                });
+                $.post("/Student/GetMyTheme", {}, function (data, status) {
+                    outstr = "";
+                    outstr = '  <div class="left_child1">老师信息</div>' +
+                       '<div class="left_child2">姓名</div>' +
+                       '<div id="name" class="left_child3"></div>' +
+                       '<div class="left_child2">电话</div>' +
+                       '<div id="tel" class="left_child3"></div>' +
+                       '<div class="left_child2">邮箱</div>' +
+                       '<div id="email" class="left_child3"></div>';
+                    $(".left").html(outstr);
+                    if (data=="") {
+                        $("#name").html("您还没有选择课题");
+                        $("#tel").html("");
+                        $("#email").html("");
+                        $("#stutop_left_right").html("");
+                        $("#stutop_right_right").html("");
+                        $("#right_left").html("");
+                    }
+                    var arr = data.split("-");
+                    //alert(arr[2]);
+                    $("#name").html(arr[0]);
+                    $("#tel").html(arr[1]);
+                    $("#email").html(arr[2]);
+                    $("#stutop_left_right").html(arr[3]);
+                    $("#stutop_right_right").html(arr[4]);
+                    $("#right_left").html(arr[5]);
+                });
+
+
+            });
+            $("#headerlink3").click(function () {
+                //隐藏显示div
+                $("#content>div").each(function () {
+                    if ($(this).attr("id") == "theme") {
+                        $(this).css("display", "block")
+                    } else {
+                        $(this).css("display", "none");
+                    }
+                });
+                $.post("/Student/GetAllTea", {}, function (data, status) {
+                   // alert(data);
+                    outstr = "";
+                    var arr = data.split("-");
+                    for (var i = 0; i < arr.length; i++) {
+                        var arr1 = arr[i].split("=");
+                        var bgcolor = "#A8DBD1";
+                        if (arr1[1] == 0) {
+                           var bgcolor = "#E1E1E1";
+                        }
+                        outstr = outstr + "<div id='"+i+"' class='tealist left_caozuo' style='background-color:"+bgcolor+"' onclick='xuanlaoshi(this)' >"+arr1[0]+"</div>"
+                    }
+                    $(".left").html(outstr);
+                });
+            });
+            /*************************************************************************/
+            $("#headerlink4").click(function () {
+                //隐藏显示div
+                $("#content>div").each(function () {
+                    if ($(this).attr("id")=="my_details") {
+                        $(this).css("display","block")
+                    } else {
+                        $(this).css("display", "none");
+                    }
+                });
+                $.post("/Student/GetStudentDetails", "{}", function (data,status) {
+                    var arr = data.split("-");
+                            $("#stunum").html(arr[0]);
+                            $("#stuname").html(arr[1]);
+                            $("#stusex").html(arr[2]);
+                            $("#stupro").html(arr[3]);
+                            $("#studep").html(arr[4]);
+                            $("#stucls").html(arr[5]);
+                            $("#stutel").html(arr[6]);
+                            $("#stuemail").html(arr[7]);
+                            $(".mytouxiang").attr("src",arr[8]);
+                });
+            });
+
+
+             /***********************/
+            $(".modifybutton").click(function () {
+                alert(1);
+                $("#form3").trigger("click");
+
+            });
+            $("#form3").click(function () { alert("2")});
+            $("#telmodify").click(function () {
+                $("#dialogtel").dialog("open");
+            });
+            $("#dialogtel").dialog({
+                autoOpen: false,   // 是否自动弹出窗口
+                modal: true,    // 设置为模态对话框
+                resizable: true,
+                width: 410,   //弹出框宽度
+                height: 240,   //弹出框高度
+                title: "修改添加电话号码",  //弹出框标题
+                position: "center",  //窗口显示的位置
+                buttons: {
+                    '确定': function () {
+                        $.post("/Student/ModifyTel", { "tgname": $('#tgname').val()}, function (data, status) {
+                            $(this).dialog("close");
+                            alert(data);
+                        });
+                    },
+                    '取消': function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+        });
+
+     </script>
+   
+    
+        <script type="text/javascript">
+            $(function () {
+                var postfile = {
+                    init: function () {
+                       // alert("init");
+                        var t = this;
+                        t.getImage = document.getElementById('get_image');
+                        t.editPic = document.getElementById('edit_pic');
+                        document.getElementById('post_file').onchange = function () {
+                            var fileList = this.files[0];
+                            var oFReader = new FileReader();
+                            oFReader.readAsDataURL(fileList);
+                            oFReader.onload = function (e) {
+                                postfile.paintImage(e.target.result);
+                            }
+                        }
+                    },
+                    paintImage: function (url) {
+                        var t = this;
+                        var createCanvas = t.getImage.getContext("2d");
+                        var img = new Image();
+                        img.src = url;
+                        img.onload = function () {
+                            createCanvas.drawImage(img, 0, 0);
+                            t.imgUrl = t.getImage.toDataURL();//存储canvas绘制的图片地址
+                            t.cutImage();
+                            t.drag();
+                        }
+                    },
+                    cutImage: function () {
+                        //alert("save");
+                        var images = new Image();
+                        images.src = t.imgUrl;
+                        //images.onload = function () {
+                        //alert("imgonload");
+                        //$.post("/Student/SavePhoto",  function (data, status) { alert(data) });
+
+                        //};
+
+                       // $.post("/Student/SavePhoto", { "image": "image" }, function (data, status) { alert(data) });
+                        alert("jeishu");
+                    }
+                }
+                postfile.init();
+            });
+    </script>
+
+</head>
+<body>
+    <div style="height:100%;width:100%">
+        <div class="tou">
+            
+        </div>
+
+        <!-----------------------头部的连接--------------------------------->
+         <div id="headerlist" >
+             <div class="headerlink">
+                 <div id="headerlink1" class="headerlinker">首    页</div>
+             </div>
+             <div class="headerlink">
+                 <div id="headerlink2" class="headerlinker">我的论文</div>
+             </div>
+             <div class="headerlink">
+                 <div id="headerlink3" class="headerlinker">论文课题</div>
+             </div>
+             <div class="headerlink">
+                 <div id="headerlink4" class="headerlinker">个人资料</div>
+             </div>
+         </div>
+         <!-----------------------头部的连接--------------------------------->
+         <!-----------------------主要内容部分--------------------------------->
+         <div id="content" class="content" style="position:relative;">
+             <div id="div1" class="stuzhuye" style="position:absolute;" >
+
+                   @* <details>
+                         <summary>HTML 5</summary>
+                          This document teaches you everything you have to learn about HTML 5.
+                  </details>*@
+                  <div class="stu_zhu_center">
+                      <div class="stu_zhu_beijing"></div>
+                      <div class="stu_zhu_tongzhi">
+                          <div class="stu_zhu_tongzhi_top">
+                              <div class="stu_zhu_tongzhi_top_1"><div class="top_1">近期通知</div></div>
+                              
+                              <div class="stu_zhu_tongzhi_top_2">
+                                  @{
+                                      var t=(List<string>)Session["strlist"];
+                                     
+                                   <ul id="ul1">
+                                     @for (int i = 0; i < t.Count; i++)
+                                     {
+                                         <li>@t[i].Split(new Char[]{'='})[0].Split(new Char[]{' '})[0] <a class='adfilename' @*readonly='true'*@ onclick='xiazaiadfile(this)'   id="@t[i].Split(new Char[]{'='})[2]">@t[i].Split(new Char[]{'='})[1]</a></li>
+                                     }
+                                  </ul>
+                                    }
+                              </div>
+                             
+                          </div>
+                          <div class="stu_zhu_tongzhi_bottom">
+                              <div class="stu_zhu_tongzhi_top_1"><div class="top_1">参考文献</div></div>
+                              
+                              <div class="stu_zhu_tongzhi_top_2">
+                                   @{
+                                      var t2=(List<string>)Session["strlist2"];
+                                     
+                                   <ul id="ul2">
+                                     @for (int i = 0; i < t2.Count; i++)
+                                     {
+                                         <li>@t2[i].Split(new Char[]{'='})[0].Split(new Char[]{' '})[0] <a class='adfilename' @*readonly='true'*@ onclick='xiazaiadfile(this)'   id="@t2[i].Split(new Char[]{'='})[2]">@t2[i].Split(new Char[]{'='})[1]</a></li>
+                                     }
+                                  </ul>
+                                    }
+                              </div>
+
+                          </div>
+                      </div>
+                      <div class="stu_zhu_right"></div>
+                  </div>
+
+             </div>
+             <div id="my_themes" style="position:absolute;display:none;width:100%;height:100%" >
+                 
+                 
+                 <div class="top">
+                     <div class="stutop_left">
+                         <div id="stutop_left_left" class="stutop_right_left">
+                             论文课题名：
+                         </div>
+                         <div id="stutop_left_right" class="stutop_right_right">
+
+                         </div>
+                     </div>
+                     <div class="stutop_right">
+                         <div id="stutop_right_left" class="stutop_right_left">
+                             评分小组名：
+                         </div>
+
+                         <div id="stutop_right_right" class="stutop_right_right">
+
+                         </div>
+
+                     </div>
+                 </div>
+                 <div class="left">
+                     
+                 </div>
+                 <div class="right">
+                      @*<table id="mytheme_table"></table>*@
+                      <div id="right_left" class="right_left" ></div>
+                      <div class="right_right">
+                          <div class="wenjianstyle">
+                              <select class="depselect" id="filestyle">
+                                  <option value ="开题报告">开题报告</option>
+                                  <option value ="论文初稿">论文初稿</option>
+                                  <option value ="论文终稿">论文终稿</option>
+                              </select>
+
+                          </div>
+                          <div class="formdiv1">如果您是第一次上传</div>
+                          <form class='uploadform1' action='/Upload/StuFileUpLoad?style=@Session["filestyle"]' method='post' enctype='multipart/form-data' id="stuform1" >
+                              
+                             <input type="file" name="file" class="file1" />
+                             <input type="text" name="filename" class="newfilename1" /><br />
+                             <textarea name="intro" rows="3" cols="20" class="textarea1" ></textarea><br />
+                             <input type="submit" value="上传" class="upbutton1" />
+                          </form>
+                          <div class="formdiv2">如果你想更换论文</div>
+                          <form class="uploadform1" action="/Upload/StuFileOverUpLoad" method="post" enctype="multipart/form-data" id="stuform2" >
+                            <input type="file" name="file1" class="file1" />
+                            <input type="text" name="filename1" class="newfilename1" /><br />
+                            <textarea name="intro1" rows="3" cols="20" class="textarea1" ></textarea><br />
+                            <input type="submit" value="覆盖上传" class="upbutton1" />
+                         </form>
+                           <form style="display:none" id="form3" class="uploadform1" action="/Upload/StuFileUpLoad" method="post" enctype="multipart/form-data" >
+                             <input id="filedianji" type="file" name="file" class="file1" />
+                             <input type="text" name="filename" class="newfilename1" value="touxiang" /><br />
+                             <textarea name="intro" rows="3" cols="20" class="textarea1" ></textarea><br />
+                             <input type="submit" value="上传" class="upbutton1" />
+                          </form>
+                      </div>
+                 </div>
+             </div>
+             <div id="theme" style="position:absolute;display:none">  
+              @*   <div id="themelist">
+                    
+
+                 </div>
+                 <div id="theme_fenye" >
+                     <table id="theme_fenye_table" class="theme_table">
+                     </table>
+                      
+                 </div>
+                 <div id="setpage"></div>*@
+                 <div class="top">
+                     <div class="chosethemetop_left">本专业的所有老师</div>
+                     <div class="chosethemetop_right">选取老师的课题</div>
+                     <div class="chosethemetop_left">相关课题介绍</div>
+                 </div> 
+                 <div class="left"></div> 
+                 <div class="right">
+                     <div class="xuanti_right_left">
+                         <table class="xuanti_right_left_table" border="1"></table>
+                     </div>
+                     <div class="xuanti_right_right"></div>
+                 </div> 
+             </div>
+
+             <!----------------------个人信息详情--------------------------------->
+             <div id="my_details" class="my_details" style="position:absolute;display:none">
+                 @*<input  type="file" name="file" id="post_file" />
+                 <div id="photo" class="image">
+                     <img src="~/Content/images/hole.jpg" />
+                     <canvas  id="get_image" width="150" height="150" style="width:150px;height:150px;border-radius:150px"></canvas>
+                 </div>*@
+                 <div class="gerenzhongxin_top"></div>
+                 <div class="gerenzhongxin">
+                     <div class="a">
+                         <img src="a" class="mytouxiang" />
+                         <div  class="modifytp"><input class="modifybutton" type="button" value="更改头像" /></div>
+                     </div>
+                     <div class="b">
+                         <div class="xiangqin">
+                             <div class="xiangqin_left">学号：</div>
+                             <div id="stunum" class="xiangqin_right"></div>
+                         </div>
+                         <div class="xiangqin">
+                             <div class="xiangqin_left">姓名：</div>
+                             <div id="stuname" class="xiangqin_right"></div>
+                         </div>
+                         <div class="xiangqin">
+                             <div class="xiangqin_left">性别：</div>
+                             <div id="stusex" class="xiangqin_right"></div>
+                         </div>
+                         <div class="xiangqin">
+                             <div class="xiangqin_left">专业：</div>
+                             <div id="stupro" class="xiangqin_right"></div>
+                         </div>
+                         <div class="xiangqin">
+                             <div class="xiangqin_left">院系：</div>
+                             <div id="studep" class="xiangqin_right"></div>
+                         </div>
+                         <div class="xiangqin">
+                             <div class="xiangqin_left">班级：</div>
+                             <div id="stucls" class="xiangqin_right"></div>
+                         </div>
+                     </div>
+                     <div class="c">
+                              <div class="c_left">
+                                  <div class="xiangqin_left" id="telmodify" >Tel：</div>
+                                  <div id="stutel" class="xiangqin_right"></div>
+                              </div>
+                              <div class="c_left">
+                                  <div class="xiangqin_left" id="emailmodify">Email：</div>
+                                  <div id="stuemail" class="xiangqin_right"></div>
+                              </div>
+                              <div id="dialogtel" style="text-align: center;padding-top: 24px">
+                              <label>电话号码:</label><input type="text" id="tgname" name="tgname" required="required"  /><br>
+                  
+                              </div>
+                     </div>
+                 </div>
+
+             </div>
+              <!----------------------个人信息详情--------------------------------->
+
+         </div>
+         <!-----------------------主要内容部分--------------------------------->
+    </div>
+</body>
+</html>

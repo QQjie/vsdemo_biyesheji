@@ -1,0 +1,41 @@
+﻿.my_themes {
+ height:100%;
+ width:100%;
+}
+.sqkt a{
+ height:30px;
+ width:100px;
+ font-size:20px;
+ line-height:30px;
+ color:black;
+ background-color:#3385FF;
+ margin-top:10px;
+}
+.top1 {
+ width:50%;
+ height:100%;
+ font-size:20px;
+ line-height:50px;
+ float:left;
+ color:#f8eded;
+}
+.top2 {
+ width:50%;
+ height:100%;
+ font-size:20px;
+ line-height:50px;
+ float:left;
+ color:#f8eded;
+}
+.mt {
+ display:none;
+}
+.buyincan {
+display:block;
+}
+.yingcangtg {
+ background: url(/Content/images/xiazai.jpg) no-repeat;
+}
+.hiddenform {
+display:none;
+}

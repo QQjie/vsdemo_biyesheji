@@ -1,0 +1,116 @@
+﻿@{
+    Layout = null;
+}
+
+@*<!DOCTYPE html>*@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 5 Transitional//EN">
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>tupian</title>
+    <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var postfile = {
+                init: function () {
+                    alert("init");
+                    var t = this;
+                    t.getImage = document.getElementById('get_image');
+                    t.editPic = document.getElementById('edit_pic');
+                    document.getElementById('post_file').onchange=function () {
+                       // alert("chagefile");
+                        var fileList = this.files[0];
+                        var oFReader = new FileReader();
+                       // alert("readqian");
+                        oFReader.readAsDataURL(fileList);
+                        //oFReader.readAsArrayBuffer(fileList);
+                       // oFReader.readAsDataURL(fileList);
+                       // alert("readhou");
+                        oFReader.onload=function(e) {
+                         //   alert("load");
+                            var myresult = document.getElementById("myresult");
+                            myresult.innerHTML = '<img src="' + this.result + '"alt=""/>';
+                          // myresult.innerHTML = this.result;
+                            postfile.paintImage(e.target.result);
+                         //   alert("loadhou");
+                        }
+                    }
+                },
+                handleFiles: function () {
+                   // alert("handlefiles");
+                    var fileList = this.files[0];
+                    var oFReader = new FileReader();
+                    oFReader.readAsDataURL(fileList);
+                    oFReader.onload = function () {
+                        postfile.paintImage(oFReader, result);
+                    }
+                },
+                paintImage: function (url) {
+                   // alert(url);
+                    alert("paintImage");
+                    var t = this;
+                    var createCanvas = t.getImage.getContext("2d");
+                    var img = new Image();
+                    
+                    img.src = url;
+
+
+                    img.onload = function () {
+                        alert("onloadimg");
+                        //createCanvas.drawImage(img, 0, 0);
+                        //t.imgUrl = t.getImage.toDataURL();
+                        //t.cutImage();
+                        //if (img.width<t.regional.offsetWidth&&img.height<t.regional.offsetHeight) {
+                        //    t.imgWidth = img.width;
+                        //    t.imgHeight = img.height;
+                        //} else {
+                        //    var pWidth = img.width / (img.height / t.regional.offsetHeight);
+                        //    var pHeight = img.height / (img.width / t.regional.offsetWidth);
+                        //    t.imgWidth = img.width > img.height ? t.regional.offsetWidth : pWidth;
+                        //    t.imgHeight = img.height > img.width ? t.regional.imgHeight : pHeight;
+                        //}
+                        ////图片的坐标
+                        //t.px = (t.regional.offsetWidth - t.imgWidth) / 2 + 'px';
+                        //t.py = (t.regional.offsetHeight - t.imgHeight) / 2 + 'px';
+                        //t.getImage.height = t.imgHeight;
+                        //t.getImage.width = t.imgWidth;
+                        //t.getImage.style.left = t.px;
+                        //t.getImage.style.top = t.py;
+
+                        //createCanvas.drawImage(img, 0, 0, t.imgWidth, t.imgHeight);
+                        createCanvas.drawImage(img, 0, 0);
+                        t.imgUrl = t.getImage.toDataURL();//存储canvas绘制的图片地址
+                        t.cutImage();
+                        t.drag();
+                    }
+                },
+                cutImage: function () {
+                    alert("cutimg");
+                    var t = this;
+                    var ctx = t.editPic.getContext('2d');
+                    var images = new Image();
+                    images.src = t.imgUrl;
+                    images.onload = function () {
+                        ctx.drawImage(images, 0, 0, 200, 200, 0, 0, 100, 100);
+                        document.getElementById('show_edit').getElementsByTagName('img')[0].src = t.editPic.toDataURL();
+                        
+                    }
+                    alert("jieshu");
+                }
+            }
+            postfile.init();
+        });
+    </script>
+</head>
+<body>
+    <div>
+        <input  type="file" name="file" id="post_file" />
+        <div id="label">
+            <canvas  id="get_image" width="200" height="200" style="width:200px;height:200px;border-radius:200px"></canvas>
+            <canvas id="edit_pic" width="100" height="100" ></canvas>
+        </div>
+        <p id="show_edit"><img src=".." /></p>
+        <div id="myresult"></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,533 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/Content/StudentCss/Index2.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <link href="~/Content/Admin/admin.css" rel="stylesheet" />
+    <link href="~/Content/Teacher/teacher.css" rel="stylesheet" />
+    <link href="~/Content/Student/Css/stu.css" rel="stylesheet" />
+    <link href="~/Content/Student/Css/stu2.css" rel="stylesheet" />
+    <link href="~/Content/Student/Css/stu3.css" rel="stylesheet" />
+    <link href="~/Content/Teacher/uploadform.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+     @*<link href="~/Content/JQeasyui/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/Content/JQeasyui/themes/icon.css" rel="stylesheet" />
+    <link href="~/Content/JQeasyui/themes/demo.css" rel="stylesheet" />
+    <script src="~/Content/JQeasyui/jquery.min.js"></script>
+    <script src="~/Content/JQeasyui/jquery.easyui.min.js"></script>*@
+    <script type="text/javascript">
+        function downchugao(obj) {
+            var jq = $(obj);
+            var name = jq.attr("class");
+            window.location = "/Upload/DownLoadStuChu?name=" + name;
+        }
+        function upxiugaigao(obj) {
+            var jq = $(obj);
+            var name = jq.attr("class");
+            $("#upchu").attr("action", "/Upload/TeaUpStuChu?name=" + name);
+            alert($("#upchu").attr("action"));
+            $("#dialogupchu").dialog("open");
+           // window.location = "/Upload/TeaUpStuChu?name=" + name;  
+        }
+        function xiazaiadfile(obj) {
+            var jq = $(obj);
+            var url = jq.attr("id");
+            window.location = "/Upload/FileDownLoad1?filename=" + url;
+        }
+        function geturl(obj) {
+            var jq = $(obj);
+            var url = jq.children().first().html();
+            //$.post("/Upload/FileDownLoad", { "filename": url }, function (data,status) {
+            //    alert(data);
+
+            //});
+            window.location = "/Upload/FileDownLoad?filename="+url;
+        }
+
+        function ChangeDateFormat(val) {
+            if (val != null) {
+                var date = new Date(parseInt(val.replace("/Date(", "").replace(")/", ""), 10));
+                //月份为0-11，所以+1，月份小于10时补个0
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            }
+            return "";
+        }
+       
+        $(function () {
+            $("#dialogtel").dialog("close");
+            $("#dialogupchu").dialog("close");
+            $(".headerlinker").mouseover(function () {
+                //alert("fef");
+                $(this).css("background-color", "white");
+                $(this).css("color", "#030F17");
+            })
+            $(".headerlinker").mouseout(function () {
+                //alert("fef");
+                $(this).css("background-color", "#2F82FF");
+                $(this).css("color", "white");
+            })
+
+            $.post("/Teacher/GetMyThemes", function (data, status) {
+                var s = $.parseJSON(data);
+                outstr = "";
+                for (var i = 0; i < s.length; i++) {
+                    for (a in s[i]) {
+                        if (a == "Theme_Name") {
+                            outstr = outstr + "<option value =" + s[i][a] + ">" + s[i][a] + "</option>"
+                        }
+                    }
+                }
+                $("#ketim").html(outstr);
+            });
+            $("#ketim").change(function () {
+
+                alert("a");
+            });
+            $("#bb").click(function () {
+                alert("tt");
+            });
+            /****我的课题******/
+            $("#headerlink1").click(function () {
+                //隐藏显示div
+                $("#content>div").each(function () {
+                    if ($(this).attr("id") == "div1") {
+                        $(this).css("display", "block")
+                    } else {
+                        $(this).css("display", "none");
+                    }
+                });
+
+            });
+            $("#headerlink2").click(function () {
+                //隐藏显示div
+                $("#content>div").each(function () {
+                    if ($(this).attr("id") == "my_themes") {
+                        $(this).css("display", "block")
+                    } else {
+                        $(this).css("display", "none");
+                    }
+                });
+                $.post("/Teacher/GetMyThemes", "{}", function (data, status) {
+                   // alert(data);
+                    var outstrtheme = "<tr><td>课题编号</td><td>课题名</td><td>提交时间</td><td>课题状态</td></tr>";
+                    var theme_name, tea_name, examinestatus, t,subtime;
+                    var s = $.parseJSON(data);
+                    for (var i = 0; i < s.length; i++) {
+                        var arr = s[i].split("-");
+                        var status = "未通过";
+                        if (arr[3]==1) {
+                            status = "通过";
+                        }
+                        outstrtheme = outstrtheme + "<tr><td>" + arr[0] + "</td><td>" + arr[1] + "</td><td>" + arr[2] + "</td><td>" + status + "</td></tr>";
+                        
+                    }
+                    $("#mytheme_table").html(outstrtheme);
+                    $(".sqkt").css("display", "block");
+                    $("#teatablename").html("论文课题信息表");
+                });
+            });
+            $("#chaxunlunwen").click(function () {
+                $(".hiddenform").css("display", "none");
+                $.post("/Teacher/GetMyThemes", "{}", function (data, status) {
+                    // alert(data);
+                    var outstrtheme = "<tr><td>课题编号</td><td>课题名</td><td>提交时间</td><td>课题状态</td></tr>";
+                    var theme_name, tea_name, examinestatus, t, subtime;
+                    var s = $.parseJSON(data);
+                    for (var i = 0; i < s.length; i++) {
+                        var arr = s[i].split("-");
+                        var status = "未通过";
+                        if (arr[3] == 1) {
+                            status = "通过";
+                        }
+                        outstrtheme = outstrtheme + "<tr><td>" + arr[0] + "</td><td>" + arr[1] + "</td><td>" + arr[2] + "</td><td>" + status + "</td></tr>";
+                    }
+                    $("#mytheme_table").html(outstrtheme);
+                    $(".sqkt").css("display", "block");
+                    $("#teatablename").html("论文课题信息表");
+                });
+            });
+/****我的课题尾******/
+
+            $("#headerlink4").click(function () {
+                //隐藏显示div
+                $("#content>div").each(function () {
+                    if ($(this).attr("id") == "my_details") {
+                        $(this).css("display", "block")
+                    } else {
+                        $(this).css("display", "none");
+                    }
+                });
+                $.post("/Teacher/GetTeacherDetails", "{}", function (data, status) {
+                    var arr = data.split("-");
+                    $("#stunum").html(arr[0]);                
+                    $("#stuname").html(arr[1]);
+                    $("#stusex").html(arr[2]);
+                    $("#studep").html(arr[3]);
+                    $("#stutel").html(arr[5]);
+                    $("#stucls").html(arr[4]);
+                    $("#stuemail").html(arr[6]);
+                    $(".mytouxiang").attr("src", arr[7]);
+
+                    //$("#stunum").html(arr[0]);
+                    //$("#stuname").html(arr[1]);
+                    //$("#stusex").html(arr[2]);
+                    //$("#stupro").html(arr[3]);
+                    //$("#studep").html(arr[4]);
+                    //$("#stucls").html(arr[5]);
+                    //$("#stutel").html(arr[6]);
+                    //$("#stuemail").html(arr[7]);
+                    //$(".mytouxiang").attr("src", arr[7]);
+                });
+            });
+            /***************论文打分*********************/
+            $("#headerlink3").click(function () {
+                //隐藏显示div
+                $("#content>div").each(function () {
+                    if ($(this).attr("id") == "theme") {
+                        $(this).css("display", "block")
+                    } else {
+                        $(this).css("display", "none");
+                    }
+                });
+
+                $.post("/Teacher/GetAllMyFuZeLunWen", {}, function (data, status) {
+                    outstr = "";
+                    var tgname = "";
+                    var s = $.parseJSON(data);
+                    if (s=="") {
+                        $("#theme_fenye_table").html("没有被分组");
+                    }
+                    if (s != "") {
+                        outstr = "<tr><td>学生名</td><td>论文文件名</td><td>提交时间</td><td>下载</td></tr>"
+                        for (var i = 0; i < s.length; i++) {
+                            if (i == 0) {
+                                $(".top2").html(s[0]);
+                            }
+                            if (i != 0) {
+                                var arr = s[i].split("=");
+                                outstr = outstr + "<tr><td>" + arr[0] + "</td><td>" + arr[1] + "</td><td>" + arr[2] + "</td><td onclick='geturl(this)'class='yingcangtd' style='background: url(/Content/images/xiazai2.jpg) no-repeat;background-size: 100% 100%;-moz-background-size: 100% 100%;-webkit-background-size: 100% 100%;' ><div class='mt'>" + arr[3] + "</div></td></tr>";
+                            }
+                        }
+                        $("#theme_fenye_table").html(outstr);
+                    }
+                });
+            });
+            /***************上传资料*********************/
+            $("#uploadziliao").click(function () {
+                //$(".right").html("");
+                $(".hiddenform").css("display","block");
+            });
+
+            /***************查询我的学生*********************/
+            $("#mythemestu").click(function () {
+                $(".hiddenform").css("display", "none");
+                $.post("/Teacher/GetMyStu", {}, function (data, status) {
+                    outstr = "";
+                    outstr = "<tr><td>学生名</td><td>课题名</td><td>选题时间</td><td>下载</td><td>上传</td></tr>"
+                    var s = $.parseJSON(data);
+                    for (var i = 0; i < s.length; i++) {
+                        var arr = s[i].split("-");
+                        outstr = outstr + "<tr><td>" + arr[0] + "</td><td>" + arr[1] + "</td><td>" + arr[2] + "</td><td class='" + arr[0] + "' onclick='downchugao(this)' >下载初稿</td><td class='" + arr[0] + "' onclick='upxiugaigao(this)'>上传修改稿</td></tr>";
+                    }
+                    $(".sqkt").css("display","none");
+                    $("#mytheme_table").html(outstr);
+                    $("#teatablename").html("选取我课题的学生");
+                });
+            });
+            /************************************/
+            /******通知栏文件********/
+            //$.post("/Student/GetAdminFile", {}, function (data, status) {
+            //    var s = $.parseJSON(data);
+            //    outstr = "";
+            //    if (s.length == 0) {
+
+            //    }
+            //    if (s.length != 0) {
+            //        for (var i = 0; i < s.length; i++) {
+            //            var arr = s[i].split("=");
+            //            var arr1 = arr[0].split(" ")[0].split("/");
+            //            var time = arr1[0] + "-" + arr1[1] + "-" + arr1[2];
+            //            outstr = outstr + "<li>" + time + "    " + "<a class='adfilename' readonly='true' onclick='xiazaiadfile(this)'   id='" + arr[2] + "'>" + arr[1] + "</a></li>"
+            //        }
+            //        $("#ul1").html(outstr);
+            //    }
+            //});
+            ///******参考文献********/
+            //$.post("/Student/GetTeacherFile", {}, function (data, status) {
+            //    var s = $.parseJSON(data);
+            //    outstr = "";
+            //    if (s.length == 0) {
+
+            //    }
+            //    if (s.length != 0) {
+            //        for (var i = 0; i < s.length; i++) {
+            //            var arr = s[i].split("=");
+            //            var arr1 = arr[0].split(" ")[0].split("/");
+            //            var time = arr1[0] + "-" + arr1[1] + "-" + arr1[2];
+            //            outstr = outstr + "<li>" + time + "    " + "<a class='adfilename' readonly='true' onclick='xiazaiadfile(this)'   id='" + arr[2] + "'>" + arr[1] + "</a></li>"
+            //        }
+            //        $("#ul2").html(outstr);
+            //    }
+            //});
+
+
+
+            $("#telmodify").click(function () {
+                $("#dialogtel").dialog("open");
+            });
+            $("#dialogtel").dialog({
+                autoOpen: false,   // 是否自动弹出窗口
+                modal: true,    // 设置为模态对话框
+                resizable: true,
+                width: 410,   //弹出框宽度
+                height: 240,   //弹出框高度
+                title: "修改添加电话号码",  //弹出框标题
+                position: "center",  //窗口显示的位置
+                buttons: {
+                    '确定': function () {
+                        $.post("/Student/ModifyTel", { "tgname": $('#tgname').val() }, function (data, status) {
+                            $(this).dialog("close");
+                            alert(data);
+                        });
+                    },
+                    '取消': function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            $("#dialogupchu").dialog({
+                autoOpen: false,   // 是否自动弹出窗口
+                modal: true,    // 设置为模态对话框
+                resizable: true,
+                width: 410,   //弹出框宽度
+                height: 240,   //弹出框高度
+                title: "添加评分小组",  //弹出框标题
+                position: "center",  //窗口显示的位置
+                buttons: {
+                    '确定': function () {
+                        $.post("/Admin/AddTeaGroup", { "tgname": $('#tgname').val(), "dep": $(".depselect option:selected").val() }, function (data, status) {
+                            $(this).dialog("close");
+                            alert(data);
+                        });
+                    },
+                    '取消': function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+
+        });
+       
+      
+    </script>
+
+</head>
+<body>
+         <div style="height:100%;width:100%">
+        <div class="admintou">
+            
+        </div>
+        <!-----------------------头部的连接--------------------------------->
+         <div id="headerlist" >
+             <div class="headerlink">
+                 <div id="headerlink1" class="headerlinker">首    页</div>
+             </div>
+             <div class="headerlink">
+                 <div id="headerlink2" class="headerlinker">我的课题</div>
+             </div>
+             <div class="headerlink">
+                 <div id="headerlink3" class="headerlinker">小组学生</div>
+             </div>
+             <div class="headerlink">
+                 <div id="headerlink4" class="headerlinker">个人资料</div>
+             </div>
+         </div>
+         <!-----------------------头部的连接--------------------------------->
+         <!-----------------------主要内容部分--------------------------------->
+         <div id="content" class="content" style="position:relative;">
+             <div id="div1" class="stuzhuye" style="position:absolute;" >
+
+                  <div class="stu_zhu_center">
+                      <div class="stu_zhu_beijing"></div>
+                      <div class="stu_zhu_tongzhi">
+                          <div class="stu_zhu_tongzhi_top">
+                              <div class="stu_zhu_tongzhi_top_1"><div class="top_1">近期通知</div></div>
+                              
+                              <div class="stu_zhu_tongzhi_top_2">
+                                   @{
+                                      var t=(List<string>)Session["strlist"];
+                                     
+                                   <ul id="ul1">
+                                     @for (int i = 0; i < t.Count; i++)
+                                     {
+                                         <li>@t[i].Split(new Char[]{'='})[0].Split(new Char[]{' '})[0] <a class='adfilename' @*readonly='true'*@ onclick='xiazaiadfile(this)'   id="@t[i].Split(new Char[]{'='})[2]">@t[i].Split(new Char[]{'='})[1]</a></li>
+                                     }
+                                  </ul>
+                                    }
+                              </div>
+                             
+                          </div>
+                          <div class="stu_zhu_tongzhi_bottom">
+                              <div class="stu_zhu_tongzhi_top_1"><div class="top_1">参考文献</div></div>
+                              
+                              <div class="stu_zhu_tongzhi_top_2">
+                                   @{
+                                      var t2=(List<string>)Session["strlist2"];
+                                     
+                                   <ul id="ul2">
+                                     @for (int i = 0; i < t2.Count; i++)
+                                     {
+                                         <li>@t2[i].Split(new Char[]{'='})[0].Split(new Char[]{' '})[0] <a class='adfilename' @*readonly='true'*@ onclick='xiazaiadfile(this)'   id="@t2[i].Split(new Char[]{'='})[2]">@t2[i].Split(new Char[]{'='})[1]</a></li>
+                                     }
+                                  </ul>
+                                    }
+                              </div>
+
+                          </div>
+                      </div>
+                      <div class="stu_zhu_right"></div>
+                  </div>
+
+             </div>
+            
+             
+             
+              <div id="my_themes" class="my_themes" style="position:absolute;display:none" >
+                 <div class="top">
+                     @*div id="top_left1" class="top_left" >请先选择要管理的院系</div>
+                      <div id="top_right1"class="top_right" >
+                          <select id="depselect1" class="depselect" ></select>
+                      </div>
+                     <div id="sousuolunwen" >
+                         <input type="text" id="sousuoinputlunwen" class="sousuoinput"  />
+                         <input type="button" value="搜索" id="sousuob论文" class="sousuob" />
+
+                     </div>*@
+                 </div>
+                 <div class="left">
+                     <input class="left_caozuo" type="button" id="chaxunlunwen" value="我的课题"/><br />
+                     <input class="left_caozuo" type="button" id="mythemestu" value="课题学生"/><br />
+                     <input class="left_caozuo" type="button" id="uploadziliao" value="上传资料"/><br />
+                 </div>
+                 <div class="right">
+                      <div id="teatablename" class="tablename">论文课题信息表</div>
+                      <table id="mytheme_table" class="theme_table" border="1"></table>
+                      <div class="sqkt"><a href="/Teacher/AddTheme" id="sqkt"  >申请课题</a></div>
+                     <div class="hiddenform">
+                         <form action="/Upload/TeaFileUpLoad" method="post" enctype="multipart/form-data" class="uploadform" >
+                               <input type="file" name="file" class="file" /> 
+                               <input type="text" name="filename" placeholder="请为文件重新命名" class="newfilename"  /><br />
+                               <textarea name="intro" rows="3" cols="20" class="textarea" placeholder="上传资料的介绍" ></textarea><br />
+                               <input type="submit" value="上传" class="upbutton" />
+                          </form>
+                     </div>
+                 </div>
+             </div>
+              
+              <!----------------------第三个DIV--------------------------------->
+             <div id="theme" style="position:absolute;display:none"> 
+                 <div class="top">
+                     <div class="top1">您所在的评分小组的名称：</div>
+                     <div class="top2"></div>
+                 </div>
+                 <div id="theme_fenye" >
+                     <table id="theme_fenye_table" class="theme_table" border="1">
+                     </table>
+                 </div>
+                 <div id="setpage"></div> 
+             </div>
+
+             <!----------------------个人信息详情--------------------------------->
+             <div id="my_details" class="my_details" style="position:absolute;display:none">
+               @*  <input  type="file" name="file" id="post_file" />
+                 <div id="photo" class="image">
+                     <img src="~/Content/images/hole.jpg" />
+                     <canvas  id="get_image" width="150" height="150" style="width:150px;height:150px;border-radius:150px"></canvas>
+                 </div>
+                 <div id="stu" >
+                     工号：<input id="stunum" value="" type="text"  readonly="true"/><br />
+                     姓名：<input id="stuname" value="" type="text"  readonly="true"/><br />
+                     性别：<input id="stusex" value="" type="text"  readonly="true"/><br />
+                     院系：<input id="studep" value="" type="text"  readonly="true"/><br />
+                     评分小组：<input id="stucls" value="" type="text"  readonly="true"/><br />
+                     Tel： <input id="stutel" value="" type="text"  readonly="true"/><br />
+                     Email：<input id="stuemail" value="" type="text"  readonly="true"/><br />
+                 </div>*@
+
+
+                  <div class="gerenzhongxin_top"></div>
+                 <div class="gerenzhongxin">
+                     <div class="a">
+                         <img src="a" class="mytouxiang" />
+                         <div  class="modifytp"><input class="modifybutton" type="button" value="更改头像" /></div>
+                     </div>
+                     <div class="b">
+                         <div class="xiangqin">
+                             <div class="xiangqin_left">学号：</div>
+                             <div id="stunum" class="xiangqin_right"></div>
+                         </div>
+                         <div class="xiangqin">
+                             <div class="xiangqin_left">姓名：</div>
+                             <div id="stuname" class="xiangqin_right"></div>
+                         </div>
+                         <div class="xiangqin">
+                             <div class="xiangqin_left">性别：</div>
+                             <div id="stusex" class="xiangqin_right"></div>
+                         </div>
+                         <div class="xiangqin">
+                             <div class="xiangqin_left">专业：</div>
+                             <div id="stupro" class="xiangqin_right"></div>
+                         </div>
+                         <div class="xiangqin">
+                             <div class="xiangqin_left">院系：</div>
+                             <div id="studep" class="xiangqin_right"></div>
+                         </div>
+                         <div class="xiangqin">
+                             <div class="xiangqin_left">班级：</div>
+                             <div id="stucls" class="xiangqin_right"></div>
+                         </div>
+                     </div>
+                     <div class="c">
+                              <div class="c_left">
+                                  <div class="xiangqin_left" id="telmodify" >Tel：</div>
+                                  <div id="stutel" class="xiangqin_right"></div>
+                              </div>
+                              <div class="c_left">
+                                  <div class="xiangqin_left" id="emailmodify">Email：</div>
+                                  <div id="stuemail" class="xiangqin_right"></div>
+                              </div>
+                              <div id="dialogtel" style="text-align: center;padding-top: 24px">
+                              <label>电话号码:</label><input type="text" id="tgname" name="tgname" required="required"  /><br>
+                  
+                              </div>
+                                <div id="dialogupchu" style="text-align: center;padding-top: 24px">
+                                     <form action="/Upload/TeaUpStuChu" method="post" enctype="multipart/form-data" class="uploadform" id="upchu">
+                                        <input type="file" name="file2" class="file" /> 
+                                        <input type="text" name="filename2" placeholder="请为文件重新命名" class="newfilename"  /><br />
+                                        <textarea name="intro2" rows="3" cols="20" class="textarea" placeholder="上传资料的介绍" ></textarea><br />
+                                         <input type="submit" value="上传" class="upbutton" />
+                                    </form>
+                  
+                              </div>
+                            
+                     </div>
+                 </div>
+             </div>
+              <!----------------------个人信息详情--------------------------------->
+
+         </div>
+         <!-----------------------主要内容部分--------------------------------->
+    </div>
+</body>
+</html>

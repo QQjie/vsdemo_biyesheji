@@ -1,0 +1,14 @@
+E:\vsdemo\HJ_OA\Log4Net\bin\Debug\Log4Net.exe.config
+E:\vsdemo\HJ_OA\Log4Net\bin\Debug\Log4Net.exe
+E:\vsdemo\HJ_OA\Log4Net\bin\Debug\Log4Net.pdb
+E:\vsdemo\HJ_OA\Log4Net\bin\Debug\log4net.dll
+E:\vsdemo\HJ_OA\Log4Net\bin\Debug\log4net.xml
+E:\vsdemo\HJ_OA\Log4Net\obj\Debug\Log4Net.exe
+E:\vsdemo\HJ_OA\Log4Net\obj\Debug\Log4Net.pdb
+E:\vs2012demo\HJ_OA\Log4Net\bin\Debug\Log4Net.exe.config
+E:\vs2012demo\HJ_OA\Log4Net\bin\Debug\Log4Net.exe
+E:\vs2012demo\HJ_OA\Log4Net\bin\Debug\Log4Net.pdb
+E:\vs2012demo\HJ_OA\Log4Net\bin\Debug\log4net.dll
+E:\vs2012demo\HJ_OA\Log4Net\bin\Debug\log4net.xml
+E:\vs2012demo\HJ_OA\Log4Net\obj\Debug\Log4Net.exe
+E:\vs2012demo\HJ_OA\Log4Net\obj\Debug\Log4Net.pdb

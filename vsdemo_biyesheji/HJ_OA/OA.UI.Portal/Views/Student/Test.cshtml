@@ -1,0 +1,49 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Test</title>
+    <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            $("#t1").click(function (e) {
+                e.preventDefault();//或者return false 不要导向页面地址
+                $.post("/Student/Test", { "pageIndex": "1", "pageSize": "2" }, function (data, status) {
+                    alert(status);
+                    alert(data);
+                        var s = $.parseJSON(data);
+                        //alert(s[1]);
+                    // alert(s.length);//获取后台返回的数据的长度不能用Length
+                        $("#ulText").empty();
+                        for (var i = 0; i <s.length; i++) {   
+                            var stu = s[i];
+                            //alert(stu.Stu_Name);
+                            var li = $("<li>" + stu.Stu_Num + ":" + stu.Stu_Name + "</li>");
+                            $("#ulText").append(li);
+                        }
+                    
+
+                })
+
+            });
+        
+        });
+
+    </script>
+</head>
+<body>
+    <div>
+        <ul id="ulText"></ul>
+        <table>
+            <tr><td><a  id="t1" href="/Student/login">1</a></td></tr>
+
+        </table>
+    </div>
+</body>
+</html>

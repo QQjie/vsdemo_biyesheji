@@ -1,0 +1,69 @@
+﻿@model IEnumerable<OA.Model.UserInfo>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //点击改变
+            $("#imageVCode").click(changeVCode);
+        });
+        //改变当前图片的地址
+        function changeVCode() {
+            var old = $("#imageVCode").attr("src");
+            var now = new Date();
+            var str = old + now.getDay() + now.getSeconds() + now.getMinutes();
+            $("#imageVCode").attr("src",str)
+        }
+    </script>
+</head>
+<body>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <div><img id="imageVCode" src="/UserInfo/ShowVCode?id=1" style="float:left;height:24px;"/></div>
+    <div style="float:left;margin-left:5px; margin-top:10px;">
+        <a href="javascript:void(0)" onclick="changeVCode();">看不清</a>
+
+    </div>
+    <table>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th></th>
+        </tr>
+    
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {  id=item.UserId  /* id=item.PrimaryKey */}) |
+                @Html.ActionLink("Details", "Details", new {   id=item.UserId  }) |
+                @Html.ActionLink("Delete", "Delete", new {  id=item.UserId  /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+    }
+    
+    </table>
+
+    
+</body>
+</html>

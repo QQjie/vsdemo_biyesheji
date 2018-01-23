@@ -1,0 +1,115 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link href="~/Content/JQeasyui/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/Content/JQeasyui/themes/icon.css" rel="stylesheet" />
+    <link href="~/Content/JQeasyui/themes/demo.css" rel="stylesheet" />
+    <link href="~/Content/Log/LogCss/login.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+  @*  <script src="~/Content/JQeasyui/jquery.min.js"></script>*@
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //点击改变
+            $("#imageVCode").click(changeVCode);
+        });
+        //改变当前图片的地址
+        function changeVCode() {
+            var old = $("#imageVCode").attr("src");
+            var now = new Date();
+            var str = old + now.getDay() + now.getSeconds() + now.getMinutes();
+            $("#imageVCode").attr("src", str)
+        }
+        $(function () {
+            $("#loadingDiv").css("display", "none");
+            //$("form").click(function () { alert("form1")});
+            $("form").validate({
+                rules: {
+                    Name: {
+                        required: true
+                    },
+                    Pwd: {
+                        required: true
+                    }
+                },
+                messages: {
+                    Name: {
+                        required: "不可以为空"
+                    },
+                    Pwd: {
+                        required: "不可以为空"
+                    }
+                }
+
+            });
+
+        });
+        function affterSuccess(data) {
+            alert(data);
+        }
+
+    </script>
+</head>
+<body>
+    
+    @*      @using(Ajax.BeginForm("Login", "Login", new AjaxOptions() { 
+                Confirm="您确认提交吗?",
+                HttpMethod="Post",
+                UpdateTargetId="resultDiv",    //异步传输返回的数据放到那里去
+               // InsertionMode=InsertionMode.Replace,
+                OnSuccess="affterSuccess",
+                LoadingElementId="loadingDiv"
+           
+           }))
+           {  
+             <select name="role">
+                 <option value="student">学生</option>
+                 <option value="teacher">老师</option>
+                 <option value="admin">教务人员</option>
+             </select><br />
+            <input id="Num" class="easyui-validatebox tb" data-options="required:true,validType:'length[3,10]',validateOnCreate:false,validateOnBlur:true" name="Num" type="text" /><br />
+            <input id="Pwd" data-val="true" data-val-required="qingshuru" name="Pwd" type="password" /><br />
+            <input type="submit" value="登录" /><br />
+           }
+            <div id="resultDiv"></div>
+
+            <div id="loadingDiv">
+               @* <img src="../../Contents/iamge/shuaxin.gif" />
+                <img src="~/Content/images/shuaxin.gif" />
+            </div>*@
+        
+        <div id="logform">
+            <div class="logform_1">
+                <div class="logform_1_left">
+                    <img class="logimg" src="~/Content/Log/Images/huizhang1.png" style="border-radius:100%"/>
+                </div>
+                <div class="logform_1_right">毕业论文管理系统</div>
+            </div>
+            <div class="logform_2">
+                <form action="/Login/Login" method="post"  class="logform_form">
+                  <select name="role"class="for,_select" >
+                     <option value="student">学生</option>
+                     <option value="teacher">老师</option>
+                     <option value="admin">教务人员</option>
+                 </select><br />
+                    <input  id="Num" placeholder="请输入学号或工号" class="easyui-validatebox tb" data-options="required:true,validType:'length[3,10]',validateOnCreate:false,validateOnBlur:true" name="Num" type="text" /><br />
+                    <input  id="Pwd" placeholder="请输入密码" data-val="true" data-val-required="qingshuru" name="Pwd" type="password" /><br />
+                    <input  id="vCode" placeholder="请输入验证码" type="text" name="vCode" />
+                    <img id="imageVCode" src="/UserInfo/ShowVCode?id=1" style="float:right;height:30px;border-radius:5px;border:1px solid blue;margin-top:9px;margin-right:120px;"/>
+                    <input  id="denglu" type="submit" value="用户登录" /><br />
+                </form>
+            </div>
+        </div>
+
+    
+</body>
+</html>

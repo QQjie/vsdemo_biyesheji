@@ -1,0 +1,103 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            alert("hello");
+        });
+
+
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            alert("hello");
+        });
+        $(function () {
+            alert("hello");
+            $("#loadingDiv").css("display", "none");
+            //$("#form0").click(function () {
+            //    alert("form");
+            //});
+            //$("#name").click(function () {
+            //    alert("name");
+            //});
+            //$("#form0").validate({
+            //    rules: {
+            //        Name: {
+            //            required:true
+            //        },
+            //        Pwd: {
+            //            required: true
+            //        }
+            //    },
+            //    messages: {
+            //        Name: {
+            //            required:"不可以为空"
+            //        },
+            //        Pwd: {
+            //        required:"不可以为空"
+            //        }
+            //    }
+
+            //});
+
+        });
+       
+
+        function affterSuccess(data) {
+            alert(data);
+        }
+    </script>
+</head>
+<body>
+    <div>
+@*        @using(Ajax.BeginForm("getDate", "Ajax", new AjaxOptions(){}))
+        
+        {
+         用户名：<input name="stuName" type="text" />
+         密码：<input name="stuPwd" type="password" />
+        
+        };*@
+          @using(Ajax.BeginForm("Login1", "Student", new AjaxOptions() { 
+                Confirm="您确认提交吗?",
+                HttpMethod="Post",
+                UpdateTargetId="resultDiv",    //异步传输返回的数据放到那里去
+               // InsertionMode=InsertionMode.Replace,
+                OnSuccess="affterSuccess",
+                LoadingElementId="loadingDiv"
+           
+           }))
+           {  
+             <select name="role">
+                 <option value="student">学生</option>
+                 <option value="teacher">老师</option>
+                 <option value="admin">教务人员</option>
+             </select>
+            <input id="name" name="Name" type="text" />
+            <input name="Pwd" type="password" />
+            <input type="submit" value="tijiao" />
+           }
+            <div id="resultDiv"></div>
+
+            <div id="loadingDiv">
+               @* <img src="../../Contents/iamge/shuaxin.gif" />*@
+                <img src="~/Content/images/shuaxin.gif" />
+            </div>
+
+        @*<form action="/Student/Login" method="post">
+            用户名：<input name="stuName" type="text" />
+            密码：<input name="stuPwd" type="password" />
+            <input type="submit" value="tijiao" />
+        </form>*@
+        
+    </div>
+</body>
+</html>

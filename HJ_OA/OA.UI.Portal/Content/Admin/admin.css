@@ -1,0 +1,115 @@
+﻿.left {
+    height:100%;
+    width:20%;
+    /*//background-color:#EFFFFF;*/
+    background-color:#A2C1DB;
+    float:left;
+    /*background: -moz-linear-gradient(left, #3385FF, white);*/
+}
+.top {
+    height:15%;
+    width:100%;
+    background-color:#A2C1DB;
+    float:left;
+
+}
+.right {
+    height:85%;
+    width:80%;
+    background-color:white;
+    float:left;
+}
+#theme {
+    height:100%;
+    width:100%;
+}
+#managestu {
+  height:100%;
+    width:100%;
+}
+.top_right {
+ float:left;
+ margin-top:7px;
+ margin-left:20px;
+}
+.top_left {
+    font-size:20px;
+ margin-left:50px;
+ float:left;
+ margin-top:5px;
+}
+.depselect {
+   width:200px;
+   height:30px;
+   border:1px solid green;
+   border-radius:5px; 
+   line-height:30px;
+   text-align:center;
+}
+.sousuoinput {
+   width:200px;
+   height:25px;
+   border:1px solid green;
+   margin-top:11px;
+   border-radius:5px; 
+   line-height:30px;
+   text-align:center;
+   margin-left:-3px;
+}
+.sousuob {
+    margin-top:3px;
+   border-radius:5px; 
+  font-family:Arial;
+  height:30px;
+  line-height:30px;
+  font-size:20px;
+  color:white;
+  font-family:"微软雅黑";
+  background-color:#3385FF;
+  border:0px;
+}
+#sousuo {
+    margin-right:50px;
+}
+#theme_fenye1 {
+ text-align:center;
+}
+.theme_table {
+width:100%;
+background-color:#EFFFFF;
+border:1px solid #3385FF;
+
+}
+.tablename {
+background-color:#3385FF;
+height:35px;
+font-size:20px;
+line-height:35px;
+}
+
+.left_caozuo {
+  width:100%;
+  margin-top:15px;
+  border:0px;
+  height:30px;
+  line-height:30px;
+  font-size:15px;
+}
+.addtg {
+   float:right;
+   width:150px;
+   border:0px;
+   height:25px;
+   margin-top:5px;
+   font-size:15px;
+   margin-right:100px;
+   background-color:#3385FF;
+}
+.hiddenintro {
+  display:none;
+}
+.jiemianzhuti {
+ float:left;
+ font-size:20px;
+ width:20%;
+}

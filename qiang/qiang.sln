@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "qiang", "qiang\qiang.csproj", "{43CA4F57-D79E-4F41-938E-2D23C64D154F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HJDemo01", "HJDemo01\HJDemo01.csproj", "{0F228718-913B-4C0B-B13F-F5A3C10B030F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{43CA4F57-D79E-4F41-938E-2D23C64D154F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43CA4F57-D79E-4F41-938E-2D23C64D154F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43CA4F57-D79E-4F41-938E-2D23C64D154F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43CA4F57-D79E-4F41-938E-2D23C64D154F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F228718-913B-4C0B-B13F-F5A3C10B030F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F228718-913B-4C0B-B13F-F5A3C10B030F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F228718-913B-4C0B-B13F-F5A3C10B030F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F228718-913B-4C0B-B13F-F5A3C10B030F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

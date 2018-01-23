@@ -1,0 +1,5 @@
+E:\vsdemo\WebService\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe.config
+E:\vsdemo\WebService\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
+E:\vsdemo\WebService\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
+E:\vsdemo\WebService\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
+E:\vsdemo\WebService\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb

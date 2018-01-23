@@ -1,0 +1,60 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>lg</title>
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            alert("hello");
+        });
+        $(function () {
+            $("#loadingDiv").css("display", "none");
+            alert("jjj");
+            $("form").click(function () {
+                alert("form");
+            });
+        })
+        function affterSuccess(data) {
+            alert(data);
+        }
+       
+    </script>
+</head>
+<body>
+    <div>
+        @using(Ajax.BeginForm("Login1", "Student", new AjaxOptions() { 
+                Confirm="您确认提交吗?",
+                HttpMethod="Post",
+                UpdateTargetId="resultDiv",    //异步传输返回的数据放到那里去
+               // InsertionMode=InsertionMode.Replace,
+                OnSuccess="affterSuccess",
+                LoadingElementId="loadingDiv"
+           
+           }))
+           {  
+             <select name="role">
+                 <option value="student">学生</option>
+                 <option value="teacher">老师</option>
+                 <option value="admin">教务人员</option>
+             </select><br />
+            <input id="name" name="Name" type="text" /><br />
+            <input name="Pwd" type="password" />     <br />  
+            <input type="submit" value="tijiao" />    <br /> 
+           }
+            <div id="resultDiv"></div>
+
+            <div id="loadingDiv">
+               @* <img src="../../Contents/iamge/shuaxin.gif" />*@
+                <img src="~/Content/images/shuaxin.gif" />
+            </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+E:\vsdemo\HJ_OA\SpringNet\bin\Debug\SpringNet.exe.config
+E:\vsdemo\HJ_OA\SpringNet\bin\Debug\SpringNet.exe
+E:\vsdemo\HJ_OA\SpringNet\bin\Debug\SpringNet.pdb
+E:\vsdemo\HJ_OA\SpringNet\bin\Debug\Common.Logging.dll
+E:\vsdemo\HJ_OA\SpringNet\bin\Debug\Spring.Core.dll
+E:\vsdemo\HJ_OA\SpringNet\bin\Debug\Spring.Core.xml
+E:\vsdemo\HJ_OA\SpringNet\obj\Debug\SpringNet.exe
+E:\vsdemo\HJ_OA\SpringNet\obj\Debug\SpringNet.pdb
+E:\vsdemo\HJ_OA\SpringNet\bin\Debug\Dal.xml
+E:\vsdemo\HJ_OA\SpringNet\obj\Debug\SpringNet.csprojResolveAssemblyReference.cache

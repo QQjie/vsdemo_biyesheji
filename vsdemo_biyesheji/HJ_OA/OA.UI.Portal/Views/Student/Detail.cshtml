@@ -1,0 +1,79 @@
+﻿@model OA.Model.Student
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Detail</title>
+</head>
+<body>
+    <fieldset>
+        <legend>Student</legend>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.Stu_Id)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Stu_Id)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.Stu_Num)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Stu_Num)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.Stu_Name)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Stu_Name)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.Stu_Pwd)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Stu_Pwd)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.Stu_Sex)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Stu_Sex)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.Stu_Tel)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Stu_Tel)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.Stu_Email)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Stu_Email)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.Stu_Photo)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Stu_Photo)
+        </div>
+    </fieldset>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { /* id=Model.PrimaryKey */ }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

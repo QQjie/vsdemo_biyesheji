@@ -1,0 +1,100 @@
+﻿@model IEnumerable<OA.Model.Student>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Stu_Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stu_Num)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stu_Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stu_Pwd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stu_Sex)
+            </th>
+            <th>
+               班级
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Profession)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stu_Tel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stu_Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stu_Photo)
+            </th>
+            <th></th>
+        </tr>
+    
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stu_Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stu_Num)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stu_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stu_Pwd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stu_Sex)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Class.C_Name)
+            </td>
+             <td>
+                @Html.DisplayFor(modelItem => item.Profession.Pro_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stu_Tel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stu_Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stu_Photo)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+    }
+    
+    </table>
+    <h1>Test</h1>
+    <div id="tt">
+        @Html.ShowPageNavigate((int)ViewData["pageIndex"],(int)ViewData["pageSize"],(int)ViewData["total"]);
+
+    </div>
+</body>
+</html>

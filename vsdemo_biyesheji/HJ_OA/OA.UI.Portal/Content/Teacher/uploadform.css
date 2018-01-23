@@ -1,0 +1,33 @@
+﻿.file {
+    width: 25%;
+    border-radius :5px;
+    height: 25px;
+ border: 1px solid #3385FF;
+border-radius: 5px;
+font-size: 15px;
+}
+.newfilename {
+width: 25%;
+height: 25px;
+border: 1px solid #3385FF;
+border-radius: 5px;
+font-size: 15px;
+
+}
+.textarea {
+width: 50%;
+border-radius: 5px;
+font-size: 15px;
+border: 1px solid #3385FF;
+}
+.upbutton {
+width: 120px;
+height: 35px;
+background-color: #3385FF;
+border-radius: 5px;
+font-size:20px;
+line-height:35px;
+}
+.uploadform {
+  margin-top:20px;
+}

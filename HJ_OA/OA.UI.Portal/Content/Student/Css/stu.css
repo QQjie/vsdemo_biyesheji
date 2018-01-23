@@ -1,0 +1,42 @@
+﻿html, body {
+    height:100%;
+    width:100%
+}
+
+.tou {
+height:15%;
+width:100%;
+ background: url(/Content/Student/Images/toubu.jpg) no-repeat;
+     background-size: 100% 100%;  
+  -moz-background-size: 100% 100%;  
+  -webkit-background-size: 100% 100%; 
+}
+.admintou {
+height:15%;
+width:100%;
+ background: url(/Content/Student/Images/toubu3.jpg) no-repeat;
+     background-size: 100% 100%;  
+  -moz-background-size: 100% 100%;  
+  -webkit-background-size: 100% 100%; 
+}
+#content {
+    /*background: url(/Content/Student/Images/beijing4.jpg) no-repeat;*/
+     background-size: 100% 100%;  
+  -moz-background-size: 100% 100%;  
+  -webkit-background-size: 100% 100%; 
+  text-align:center;
+  margin:0 auto;
+ 
+}
+td {
+margin-left:20px;
+margin-top:10px;
+}
+#mytheme_table td {
+margin-left:40px;
+margin-top:20px;
+}
+.td {
+margin-left:40px;
+margin-top:20px;
+}
